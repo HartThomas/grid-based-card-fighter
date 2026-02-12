@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="Level" load_steps=13 format=3 uid="uid://4hyx33ejhevw"]
+
+[ext_resource type="Script" uid="uid://cgtlvr2d8q50r" path="res://entities/enemies/enemy_data.gd" id="1_4koy8"]
+[ext_resource type="Script" uid="uid://b3auy3tuo6d38" path="res://resources/levels/level_data.gd" id="1_27lwx"]
+[ext_resource type="Resource" uid="uid://de1ud3syqnfgg" path="res://resources/levels/bosses/boss.tres" id="1_yj7ko"]
+[ext_resource type="Script" uid="uid://bw7p8if7w6rmm" path="res://resources/loot/loot.gd" id="2_k4k5y"]
+[ext_resource type="Script" uid="uid://437mvmy1oit2" path="res://resources/levels/option_data.gd" id="4_wgdn6"]
+[ext_resource type="Resource" uid="uid://bb0t85u0u142k" path="res://entities/enemies/bogman/bogman.tres" id="5_cplwe"]
+[ext_resource type="Resource" uid="uid://ihmmmv3w4q7g" path="res://entities/loot/sword.tres" id="6_yj7ko"]
+
+[sub_resource type="Resource" id="Resource_whx0c"]
+script = ExtResource("4_wgdn6")
+id = 0
+enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
+loot = Array[ExtResource("2_k4k5y")]([ExtResource("6_yj7ko")])
+metadata/_custom_type_script = "uid://437mvmy1oit2"
+
+[sub_resource type="Resource" id="Resource_a3dlp"]
+script = ExtResource("2_k4k5y")
+name = "Dirty Loot"
+metadata/_custom_type_script = "uid://bw7p8if7w6rmm"
+
+[sub_resource type="Resource" id="Resource_wbfav"]
+script = ExtResource("4_wgdn6")
+id = 0
+enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
+loot = Array[ExtResource("2_k4k5y")]([SubResource("Resource_a3dlp")])
+metadata/_custom_type_script = "uid://437mvmy1oit2"
+
+[sub_resource type="Resource" id="Resource_3jr22"]
+script = ExtResource("4_wgdn6")
+id = 0
+enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
+loot = Array[ExtResource("2_k4k5y")]([ExtResource("6_yj7ko"), ExtResource("6_yj7ko"), ExtResource("6_yj7ko")])
+metadata/_custom_type_script = "uid://437mvmy1oit2"
+
+[sub_resource type="Resource" id="Resource_2tymr"]
+script = ExtResource("4_wgdn6")
+id = 0
+enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
+loot = Array[ExtResource("2_k4k5y")]([ExtResource("6_yj7ko"), ExtResource("6_yj7ko")])
+metadata/_custom_type_script = "uid://437mvmy1oit2"
+
+[resource]
+script = ExtResource("1_27lwx")
+id = 1
+options = Array[ExtResource("4_wgdn6")]([SubResource("Resource_whx0c"), SubResource("Resource_wbfav"), SubResource("Resource_3jr22"), SubResource("Resource_2tymr")])
+boss = ExtResource("1_yj7ko")

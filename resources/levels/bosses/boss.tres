@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossOption" load_steps=6 format=3 uid="uid://de1ud3syqnfgg"]
+
+[ext_resource type="Script" uid="uid://cgtlvr2d8q50r" path="res://entities/enemies/enemy_data.gd" id="1_w2bov"]
+[ext_resource type="Script" uid="uid://bw7p8if7w6rmm" path="res://resources/loot/loot.gd" id="2_6kpc3"]
+[ext_resource type="Resource" uid="uid://bb0t85u0u142k" path="res://entities/enemies/bogman/bogman.tres" id="2_yjmcn"]
+[ext_resource type="Script" uid="uid://btcgyp1kj3n5v" path="res://resources/levels/boss_option_data.gd" id="3_yjmcn"]
+[ext_resource type="Resource" uid="uid://ihmmmv3w4q7g" path="res://entities/loot/sword.tres" id="4_vdkvk"]
+
+[resource]
+script = ExtResource("3_yjmcn")
+name = "Bogman Boss"
+id = 0
+enemies = Array[ExtResource("1_w2bov")]([ExtResource("2_yjmcn"), ExtResource("2_yjmcn"), ExtResource("2_yjmcn"), ExtResource("2_yjmcn"), ExtResource("2_yjmcn")])
+loot = Array[ExtResource("2_6kpc3")]([ExtResource("4_vdkvk"), ExtResource("4_vdkvk"), ExtResource("4_vdkvk"), ExtResource("4_vdkvk"), ExtResource("4_vdkvk")])
+metadata/_custom_type_script = "uid://btcgyp1kj3n5v"

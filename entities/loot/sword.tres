@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Loot" load_steps=3 format=3 uid="uid://ihmmmv3w4q7g"]
+
+[ext_resource type="Script" uid="uid://bw7p8if7w6rmm" path="res://resources/loot/loot.gd" id="1_i758g"]
+[ext_resource type="Texture2D" uid="uid://bo01jsknwtx07" path="res://art/sprites/sword.png" id="2_5i8ja"]
+
+[resource]
+script = ExtResource("1_i758g")
+name = "Sword"
+texture = ExtResource("2_5i8ja")
+metadata/_custom_type_script = "uid://bw7p8if7w6rmm"

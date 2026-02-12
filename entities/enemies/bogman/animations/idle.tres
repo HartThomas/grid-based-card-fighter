@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SpriteAnimation" load_steps=3 format=3 uid="uid://vxkxc7x7u78b"]
+
+[ext_resource type="Script" uid="uid://dh54dujmf3tr5" path="res://entities/animated_sprite/sprite_animation/sprite_animation.gd" id="1_ws08a"]
+[ext_resource type="Texture2D" uid="uid://qdiyxu0bujf0" path="res://art/sprites/bogman_idle.png" id="2_q6otc"]
+
+[resource]
+script = ExtResource("1_ws08a")
+animation_name = "bogman_idle"
+texture = ExtResource("2_q6otc")
+offset = Vector2(0, 0)
+columns = 3
+rows = 1
+used_columns = 3
+time_per_frame = Array[float]([0.6, 0.6, 0.6])
+loop = true
+despawn = false
+metadata/_custom_type_script = "uid://dh54dujmf3tr5"

@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=3 uid="uid://drt212p6pfrw5"]
+
+[ext_resource type="Script" uid="uid://osexfsvayc0d" path="res://ui/level_menu/boss_option/boss_option.gd" id="1_kaxs5"]
+[ext_resource type="Texture2D" uid="uid://be2lakr7gh0rm" path="res://art/menus/boss_option.png" id="1_tnppw"]
+
+[node name="BossOption" type="Control"]
+custom_minimum_size = Vector2(640, 160)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -200.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kaxs5")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("1_tnppw")
+
+[node name="BossOptionContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="LabelMarginContainer" type="MarginContainer" parent="MarginContainer/BossOptionContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="BossLabel" type="Label" parent="MarginContainer/BossOptionContainer/LabelMarginContainer"]
+layout_mode = 2
+text = "Boss"
+horizontal_alignment = 1
+
+[node name="EnemiesMarginContainer" type="MarginContainer" parent="MarginContainer/BossOptionContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="EnemiesHBoxContainer" type="HBoxContainer" parent="MarginContainer/BossOptionContainer/EnemiesMarginContainer"]
+layout_mode = 2
+
+[node name="EnemiesLabel" type="Label" parent="MarginContainer/BossOptionContainer/EnemiesMarginContainer/EnemiesHBoxContainer"]
+layout_mode = 2
+text = "Enemies"
+
+[node name="EnemiesContainer" type="HBoxContainer" parent="MarginContainer/BossOptionContainer/EnemiesMarginContainer/EnemiesHBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="LootMarginContainer" type="MarginContainer" parent="MarginContainer/BossOptionContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="LootHBoxContainer" type="HBoxContainer" parent="MarginContainer/BossOptionContainer/LootMarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LootLabel" type="Label" parent="MarginContainer/BossOptionContainer/LootMarginContainer/LootHBoxContainer"]
+layout_mode = 2
+text = "Loot"
+
+[node name="LootContainer" type="HBoxContainer" parent="MarginContainer/BossOptionContainer/LootMarginContainer/LootHBoxContainer"]
+layout_mode = 2
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

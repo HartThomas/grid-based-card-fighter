@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfyu0txjgliax"]
+
+[ext_resource type="Script" uid="uid://6ucxh0t4py50" path="res://entities/animated_sprite/animated_sprite.gd" id="1_5lsxi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hq2l4"]
+
+[node name="AnimatedSprite" type="AnimatedSprite2D"]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_hq2l4")
+centered = false
+script = ExtResource("1_5lsxi")

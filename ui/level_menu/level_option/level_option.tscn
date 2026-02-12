@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://e6puqhe3o2dt"]
+
+[ext_resource type="Script" uid="uid://dp60cdganbuhk" path="res://ui/level_menu/level_option/level_option.gd" id="1_6yfs2"]
+
+[node name="LevelOption" type="VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -340.0
+offset_bottom = -260.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+script = ExtResource("1_6yfs2")
+
+[node name="EnemiesMarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="EnemiesVBoxContainer" type="HBoxContainer" parent="EnemiesMarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="EnemiesLabel" type="Label" parent="EnemiesMarginContainer/EnemiesVBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+text = "Enemies"
+horizontal_alignment = 1
+
+[node name="EnemiesContainer" type="HBoxContainer" parent="EnemiesMarginContainer/EnemiesVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="LootMarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="LootHBoxContainer" type="HBoxContainer" parent="LootMarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LootLabel" type="Label" parent="LootMarginContainer/LootHBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+text = "Loot"
+horizontal_alignment = 1
+
+[node name="LootContainer" type="HBoxContainer" parent="LootMarginContainer/LootHBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

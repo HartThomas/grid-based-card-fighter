@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://8l3poh3ig2dj"]
+
+[ext_resource type="Script" uid="uid://ddt3i5kc4ybcs" path="res://ui/main_menu/main_menu.gd" id="1_mu8pm"]
+[ext_resource type="Texture2D" uid="uid://c45pxw5vdid41" path="res://art/menus/main_menu_background.png" id="2_omy8q"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mu8pm")
+
+[node name="BackgroundTexure" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+texture = ExtResource("2_omy8q")
+
+[node name="StartButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 299.0
+offset_top = 116.0
+offset_right = 363.0
+offset_bottom = 148.0
+
+[connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]
