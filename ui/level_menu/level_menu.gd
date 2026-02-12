@@ -31,11 +31,20 @@ func _ready() -> void:
 		boss_option.boss_data = data.boss
 		boss_container.add_child(boss_option)
 
-func option_clicked(options : Option) -> void:
-	print(options.enemies[0].name)
-	#ResourceLoader.load_threaded_request(target_scene_path)
+func option_clicked(option : Option) -> void:
+	print(option.enemies[0].name)
 	var next_level = load("res://gameplay/level/level.tscn")
-	get_tree().change_scene_to_packed(next_level)
+	var level_instance = next_level.instantiate()
+
+	# Pass your data
+	level_instance.size = option.size
+
+	# Change scene manually
+	get_tree().root.add_child(level_instance)
+	get_tree().current_scene.queue_free()
+	get_tree().current_scene = level_instance
+	#get_tree().change_scene_to_packed(next_level)
+	#ResourceLoader.load_threaded_request(target_scene_path)
 
 #func _process(_delta: float) -> void:
 	## Update the status:

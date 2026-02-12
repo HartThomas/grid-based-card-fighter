@@ -1,12 +1,15 @@
 extends Node2D
 
+class_name LevelScene
+
 var generator = preload("res://systems/level_generator/level_generator.gd")
 var level_data : Array[Row] = []
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer
+var size = Vector2i(10,10)
 
 func _ready() -> void:
 	var level_generator = generator.new() as LevelGenerator
-	level_data = level_generator.generate_level()
+	level_data = level_generator.generate_level(size)
 	fill_tile_map_layer_using_data()
 
 

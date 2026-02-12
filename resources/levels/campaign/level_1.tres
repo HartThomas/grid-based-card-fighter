@@ -13,6 +13,7 @@ script = ExtResource("4_wgdn6")
 id = 0
 enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
 loot = Array[ExtResource("2_k4k5y")]([ExtResource("6_yj7ko")])
+size = Vector2i(50, 50)
 metadata/_custom_type_script = "uid://437mvmy1oit2"
 
 [sub_resource type="Resource" id="Resource_a3dlp"]
@@ -25,6 +26,7 @@ script = ExtResource("4_wgdn6")
 id = 0
 enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
 loot = Array[ExtResource("2_k4k5y")]([SubResource("Resource_a3dlp")])
+size = Vector2i(50, 50)
 metadata/_custom_type_script = "uid://437mvmy1oit2"
 
 [sub_resource type="Resource" id="Resource_3jr22"]
@@ -32,6 +34,7 @@ script = ExtResource("4_wgdn6")
 id = 0
 enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
 loot = Array[ExtResource("2_k4k5y")]([ExtResource("6_yj7ko"), ExtResource("6_yj7ko"), ExtResource("6_yj7ko")])
+size = Vector2i(50, 50)
 metadata/_custom_type_script = "uid://437mvmy1oit2"
 
 [sub_resource type="Resource" id="Resource_2tymr"]
@@ -39,6 +42,7 @@ script = ExtResource("4_wgdn6")
 id = 0
 enemies = Array[ExtResource("1_4koy8")]([ExtResource("5_cplwe"), ExtResource("5_cplwe"), ExtResource("5_cplwe")])
 loot = Array[ExtResource("2_k4k5y")]([ExtResource("6_yj7ko"), ExtResource("6_yj7ko")])
+size = Vector2i(50, 50)
 metadata/_custom_type_script = "uid://437mvmy1oit2"
 
 [resource]

@@ -2,12 +2,12 @@ extends Node
 
 class_name LevelGenerator
 
-var size = Vector2i(50,50)
+#var size = Vector2i(50,50)
 
 func generate_level(size : Vector2i = Vector2i(50,50)) -> Array[Row]:
 	
 	var level_data = create_empty_level(size.y,size.x)
-	create_path([Vector2i(5,0), Vector2i(size.x - 6, size.y -1)],level_data)
+	create_path([Vector2i(5,0), Vector2i(size.x - 6, size.y -1)],level_data, size)
 	return level_data
 
 func create_empty_level(height, width) -> Array[Row]:
@@ -26,17 +26,17 @@ func create_empty_level(height, width) -> Array[Row]:
 	return level_data
 
 
-func create_path(points: Array[Vector2i],level_data: Array[Row]) -> void:
+func create_path(points: Array[Vector2i],level_data: Array[Row], size: Vector2i) -> void:
 	var empty_tile = Tile.new()
 	empty_tile.terrain = 'empty'
 	level_data[points[0].y].set_tile(points[0].x,empty_tile)
-	path(points[0], points[points.size() - 1], level_data)
+	path(points[0], points[points.size() - 1], level_data, size)
 
-func path(next : Vector2i, end_tile: Vector2i, level_data: Array[Row]) -> void:
+func path(next : Vector2i, end_tile: Vector2i, level_data: Array[Row], size: Vector2i) -> void:
 	var stack :  Array[Vector2i] = [next]
 	while stack.size() > 0:
 		var coords_array : Array[Vector2i]= [Vector2i(1,0),Vector2i(0,1),Vector2i(-1,0),Vector2i(0,-1)]
-		var next_tile = check_surrounding_tiles(coords_array, stack.back(), end_tile, level_data)
+		var next_tile = check_surrounding_tiles(coords_array, stack.back(), end_tile, level_data, size)
 		if next_tile == Vector2i(-1,-1):
 			stack.pop_back()
 		elif next_tile == end_tile:
@@ -51,7 +51,7 @@ func path(next : Vector2i, end_tile: Vector2i, level_data: Array[Row]) -> void:
 			stack.append(next_tile)
 	print('no path found')
 
-func check_surrounding_tiles(coords: Array[Vector2i], centre: Vector2i, end_tile: Vector2i, level_data: Array[Row]) :
+func check_surrounding_tiles(coords: Array[Vector2i], centre: Vector2i, end_tile: Vector2i, level_data: Array[Row], size: Vector2i) :
 	coords.shuffle()
 	var new_tile = centre + coords[0]
 	if new_tile.x < size.x and new_tile.x >= 0 and new_tile.y < size.y and new_tile.y >= 0:
@@ -60,9 +60,9 @@ func check_surrounding_tiles(coords: Array[Vector2i], centre: Vector2i, end_tile
 		else:
 			coords.pop_front()
 			if coords.size() > 0:
-				return check_surrounding_tiles(coords, centre, end_tile,level_data)
+				return check_surrounding_tiles(coords, centre, end_tile,level_data, size)
 	else:
 		coords.remove_at(0)
 		if coords.size() > 0:
-			return check_surrounding_tiles(coords, centre, end_tile,level_data)
+			return check_surrounding_tiles(coords, centre, end_tile,level_data, size)
 	return Vector2i(-1,-1)
