@@ -8,6 +8,7 @@ var level_number = 1
 var option_data : Option
 @onready var enemies_container: HBoxContainer = $EnemiesMarginContainer/EnemiesVBoxContainer/EnemiesContainer
 @onready var loot_container: HBoxContainer = $LootMarginContainer/LootHBoxContainer/LootContainer
+signal option_clicked(option_data)
 
 func _ready() -> void:
 	var data = load("res://resources/levels/campaign/level_1.tres") as Level
@@ -32,4 +33,4 @@ func add_to_enemies(sprite: AnimatedEntity) -> void:
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print(option_data)
+		option_clicked.emit()
