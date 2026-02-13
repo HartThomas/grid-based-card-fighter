@@ -1,10 +1,11 @@
 extends Node2D
 
-class_name Player
+class_name EntityContainer
 
-@export var player_data : PlayerData
+@export var data : PlayerData
+var current_position : Vector2i = Vector2i(5,0)
 
 func _ready() -> void:
-	if !player_data:
+	if !data:
 		var new_player = PlayerData.new()
-		player_data = new_player
+		data = new_player
