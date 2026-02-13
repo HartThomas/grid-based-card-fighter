@@ -15,3 +15,8 @@ func get_tile(x: int) -> Tile:
 
 func set_tile(x: int, tile: Tile) -> void:
 	tiles[x] = tile
+
+func set_tile_entity(x :int, entity: Entity) -> void:
+	var tile = get_tile(x)
+	if !tile.entity:
+		tile.set_entity(entity)

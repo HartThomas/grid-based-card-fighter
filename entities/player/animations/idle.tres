@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="SpriteAnimation" load_steps=3 format=3 uid="uid://h3rk077ykyxi"]
+
+[ext_resource type="Script" uid="uid://dh54dujmf3tr5" path="res://entities/animated_sprite/sprite_animation/sprite_animation.gd" id="1_85pud"]
+[ext_resource type="Texture2D" uid="uid://chbj0auydxwmc" path="res://art/sprites/player_new.png" id="2_8kxq5"]
+
+[resource]
+script = ExtResource("1_85pud")
+animation_name = "player_idle"
+texture = ExtResource("2_8kxq5")
+offset = Vector2(0, 0)
+columns = 1
+rows = 1
+used_columns = 1
+time_per_frame = Array[float]([10.0])
+loop = true
+despawn = false
+metadata/_custom_type_script = "uid://dh54dujmf3tr5"

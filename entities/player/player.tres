@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PlayerData" load_steps=4 format=3 uid="uid://c70gtpibfp1s0"]
+
+[ext_resource type="Script" uid="uid://dh54dujmf3tr5" path="res://entities/animated_sprite/sprite_animation/sprite_animation.gd" id="1_irhpw"]
+[ext_resource type="Resource" uid="uid://h3rk077ykyxi" path="res://entities/player/animations/idle.tres" id="2_3cha7"]
+[ext_resource type="Script" uid="uid://cchvabg6tmaot" path="res://entities/player/player_data.gd" id="2_5m764"]
+
+[resource]
+script = ExtResource("2_5m764")
+health = 50
+name = "player"
+animations = Dictionary[String, ExtResource("1_irhpw")]({
+"idle": ExtResource("2_3cha7")
+})
+metadata/_custom_type_script = "uid://cchvabg6tmaot"

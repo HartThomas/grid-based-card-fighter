@@ -16,7 +16,6 @@ func to_sprite_frames(name: String = animation_name, frame_size: Vector2i = Vect
 	var frames = SpriteFrames.new()
 	frames.add_animation(name)
 	frames.set_animation_loop(name, loop)
-
 	var image = texture.get_image()
 	for y in range(rows):
 		for x in range(used_columns):
