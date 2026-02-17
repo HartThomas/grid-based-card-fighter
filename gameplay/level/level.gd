@@ -8,13 +8,13 @@ var level_data : Array[Row] = []
 var size = Vector2i(10,10)
 const PLAYER = preload("res://entities/player/player.tscn")
 var instantiated_player_scene : EntityContainer
+var key_clicked : bool = false
 
 func _ready() -> void:
 	var level_generator = generator.new() as LevelGenerator
 	level_data = level_generator.generate_level(size)
 	fill_tile_map_layer_using_data()
 	add_player()
-
 
 func fill_tile_map_layer_using_data() -> void:
 	tile_map_layer.clear()
@@ -44,19 +44,23 @@ func add_entity_to_tile(entity: Entity, tile :Vector2i) ->void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
-		match event.as_text_keycode():
-			'Down':
-				var current_position = instantiated_player_scene.current_position
-				move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y+1))
-			'Up':
-				var current_position = instantiated_player_scene.current_position
-				move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y-1))
-			'Right':
-				var current_position = instantiated_player_scene.current_position
-				move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x+1, current_position.y))
-			'Left':
-				var current_position = instantiated_player_scene.current_position
-				move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x-1, current_position.y))
+		if not key_clicked:
+			key_clicked = true
+			match event.as_text_keycode():
+				'Down':
+					var current_position = instantiated_player_scene.current_position
+					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y+1))
+				'Up':
+					var current_position = instantiated_player_scene.current_position
+					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y-1))
+				'Right':
+					var current_position = instantiated_player_scene.current_position
+					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x+1, current_position.y))
+				'Left':
+					var current_position = instantiated_player_scene.current_position
+					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x-1, current_position.y))
+		if event.is_released():
+			key_clicked = false
 
 func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 	var data = entity.data
@@ -67,14 +71,18 @@ func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 			print('something is in the way')
 		else:
 			level_data[to.y].set_tile_entity(to.x, data)
-			level_data[from.y].set_tile_entity(from.x,null)
+			level_data[from.y].set_tile_entity(from.x, null)
 			entity.position = to * 32
 			entity.current_position = to
 	else:
 		print('The entity ' + str(entity) + ' does not exist at ' + str(from))
 
 func can_entity_move_there(target : Vector2i) -> bool:
+	if target.x < 0 or target.x >= size.x or target.y < 0 or target.y >= size.y:
+		print('trying to move out of bounds')
+		return false
 	var target_tile = level_data[target.y].get_tile(target.x)
 	if target_tile.entity:
-		print(target_tile.terrain,' terrain ', target_tile.entity.health, 'heath', target_tile.entity.name, ' name')
+		if not target_tile.entity.name:
+			print(target_tile.terrain,' terrain ', target_tile.entity.health, ' health', target_tile.entity.name, ' name')
 	return target_tile.terrain != 'wall' and !target_tile.entity
