@@ -9,3 +9,4 @@ func _ready() -> void:
 	if !data:
 		var new_player = PlayerData.new()
 		data = new_player
+	

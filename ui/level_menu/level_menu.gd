@@ -34,10 +34,10 @@ func _ready() -> void:
 func option_clicked(option : Option) -> void:
 	print(option.enemies[0].name)
 	var next_level = load("res://gameplay/level/level.tscn")
-	var level_instance = next_level.instantiate()
+	var level_instance = next_level.instantiate() as LevelScene
 
 	# Pass your data
-	level_instance.size = option.size
+	level_instance.data = option
 
 	# Change scene manually
 	get_tree().root.add_child(level_instance)

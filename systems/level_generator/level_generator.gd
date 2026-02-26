@@ -2,7 +2,7 @@ extends Node
 
 class_name LevelGenerator
 
-#var size = Vector2i(50,50)
+var free_cells : Array[Vector2i] = []
 
 func generate_level(size : Vector2i = Vector2i(50,50)) -> Array[Row]:
 	
@@ -12,19 +12,17 @@ func generate_level(size : Vector2i = Vector2i(50,50)) -> Array[Row]:
 
 func create_empty_level(height, width) -> Array[Row]:
 	var level_data: Array[Row] = []
-
 	for y in range(height):
 		var row = Row.new(width)
-
 		for x in range(width):
 			var tile = Tile.new()
 			tile.entity = null
 			row.tiles[x] = tile
-
 		level_data.append(row)
-
 	return level_data
 
+func get_free_cells() -> Array[Vector2i]:
+	return free_cells
 
 func create_path(points: Array[Vector2i],level_data: Array[Row], size: Vector2i) -> void:
 	var empty_tile = Tile.new()
@@ -49,6 +47,7 @@ func path(next : Vector2i, end_tile: Vector2i, level_data: Array[Row], size: Vec
 			empty_tile.terrain = 'empty'
 			level_data[next_tile.y].set_tile(next_tile.x, empty_tile)
 			stack.append(next_tile)
+			free_cells.append(next_tile)
 	print('no path found')
 
 func check_surrounding_tiles(coords: Array[Vector2i], centre: Vector2i, end_tile: Vector2i, level_data: Array[Row], size: Vector2i) :
@@ -66,3 +65,18 @@ func check_surrounding_tiles(coords: Array[Vector2i], centre: Vector2i, end_tile
 		if coords.size() > 0:
 			return check_surrounding_tiles(coords, centre, end_tile,level_data, size)
 	return Vector2i(-1,-1)
+
+func random_free_cell(amount: int) -> Array[Vector2i]:
+	free_cells.shuffle()
+	var tiles : Array[Vector2i] = []
+	for i in range(amount):
+		tiles.append(free_cells.pop_front())
+	return tiles
+
+func get_random_cells_around(center: Vector2i, radius: int, count: int) -> Array[Vector2i]:
+	var nearby : Array[Vector2i] = []
+	for cell in free_cells:
+		if cell.distance_to(center) <= radius:
+			nearby.append(cell)
+	nearby.shuffle()
+	return nearby.slice(0, min(count, nearby.size()))

@@ -6,6 +6,8 @@
 
 [resource]
 script = ExtResource("1_m8qr4")
+health = 10
+speed = 1.0
 name = "bogman"
 animations = Dictionary[String, ExtResource("1_x5gnc")]({
 "idle": ExtResource("2_452km")
