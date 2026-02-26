@@ -15,6 +15,10 @@ run/main_scene="uid://8l3poh3ig2dj"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+CooldownManager="*res://globals/cooldown_manager.gd"
+
 [display]
 
 window/size/viewport_width=640

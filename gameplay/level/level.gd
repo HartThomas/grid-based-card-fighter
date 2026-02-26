@@ -52,9 +52,9 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 		var enemy_scene = ENEMY.instantiate()
 		var enemy_pos : Vector2i = spawn_cells[i]
 		enemy_scene.position = enemy_pos * 32
+		enemy_scene.current_position = enemy_pos
 		add_child(enemy_scene)
 		add_entity_to_tile(enemy_scene.data, enemy_pos)
-		#instantiated_enemy_scene = enemy_scene
 
 func add_entity_to_tile(entity: Entity, tile :Vector2i) ->void:
 	level_data[tile.y].set_tile_entity(tile.x,entity)
@@ -96,6 +96,23 @@ func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 	else:
 		print('The entity ' + str(entity) + ' does not exist at ' + str(from))
 
+func move_enemy(entity: EnemyContainer, from :Vector2i, to: Vector2i) -> void:
+	var data = entity.data
+	var entity_at_current_position = level_data[from.y].get_tile(from.x).entity
+	
+	if data == entity_at_current_position:
+		if !can_entity_move_there(to):
+			print('something is in the way')
+		else:
+			level_data[to.y].set_tile_entity(to.x, data)
+			astar_grid.set_point_solid(to, false)
+			level_data[from.y].set_tile_entity(from.x, null)
+			astar_grid.set_point_solid(from, true)
+			entity.position = to * 32
+			entity.current_position = to
+	else:
+		print('The entity ' + str(entity) + ' does not exist at ' + str(from))
+
 func can_entity_move_there(target : Vector2i) -> bool:
 	if target.x < 0 or target.x >= data.size.x or target.y < 0 or target.y >= data.size.y:
 		print('trying to move out of bounds')
@@ -108,8 +125,9 @@ func can_entity_move_there(target : Vector2i) -> bool:
 
 func create_astar() -> void:
 	var astar = AStarGrid2D.new()
-	var width = level_data[0].width
+	var width = level_data[0].tiles.size()
 	var height = level_data.size()
+	print('width ', width, height, 'height')
 	astar.region = Rect2i(0, 0, width, height)
 	astar.cell_size = Vector2(1, 1)
 	astar.update()
@@ -130,3 +148,14 @@ func recalculate_path(from, to) -> Array[Vector2i]:
 	else:
 		print("Missing point in AStar:", from, to)
 	return path
+
+var pathing_requests : Array[EnemyPathingRequest] = []
+
+func handle_repathing() -> void:
+	if pathing_requests.size() > 0:
+		var request = pathing_requests.pop_front() as EnemyPathingRequest
+		var new_path = recalculate_path(request.from, request.to)
+		request.entity.path = new_path
+
+func _process(delta: float) -> void:
+	handle_repathing()
