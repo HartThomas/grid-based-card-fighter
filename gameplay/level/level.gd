@@ -19,7 +19,7 @@ func _ready() -> void:
 	fill_tile_map_layer_using_data()
 	create_astar()
 	add_player()
-	if data.enemies.size() >0:
+	if data.enemies.size() > 0:
 		add_enemies(data.enemies, level_generator)
 
 func fill_tile_map_layer_using_data() -> void:
@@ -88,30 +88,34 @@ func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 			print('something is in the way')
 		else:
 			level_data[to.y].set_tile_entity(to.x, data)
-			astar_grid.set_point_solid(to, false)
+			#astar_grid.set_point_solid(to, false)
 			level_data[from.y].set_tile_entity(from.x, null)
-			astar_grid.set_point_solid(from, true)
+			#astar_grid.set_point_solid(from, true)
 			entity.position = to * 32
 			entity.current_position = to
 	else:
 		print('The entity ' + str(entity) + ' does not exist at ' + str(from))
 
-func move_enemy(entity: EnemyContainer, from :Vector2i, to: Vector2i) -> void:
+func move_enemy(entity: EnemyContainer, from :Vector2i, to: Vector2i) -> bool:
 	var data = entity.data
 	var entity_at_current_position = level_data[from.y].get_tile(from.x).entity
 	
 	if data == entity_at_current_position:
 		if !can_entity_move_there(to):
 			print('something is in the way')
+			entity.path = recalculate_path(entity.current_position, instantiated_player_scene.current_position)
+			return false
 		else:
 			level_data[to.y].set_tile_entity(to.x, data)
-			astar_grid.set_point_solid(to, false)
+			#astar_grid.set_point_solid(to, false)
 			level_data[from.y].set_tile_entity(from.x, null)
-			astar_grid.set_point_solid(from, true)
+			#astar_grid.set_point_solid(from, true)
 			entity.position = to * 32
 			entity.current_position = to
+			return true
 	else:
 		print('The entity ' + str(entity) + ' does not exist at ' + str(from))
+		return false
 
 func can_entity_move_there(target : Vector2i) -> bool:
 	if target.x < 0 or target.x >= data.size.x or target.y < 0 or target.y >= data.size.y:
@@ -120,14 +124,13 @@ func can_entity_move_there(target : Vector2i) -> bool:
 	var target_tile = level_data[target.y].get_tile(target.x)
 	if target_tile.entity:
 		if not target_tile.entity.name:
-			print(target_tile.terrain,' terrain ', target_tile.entity.health, ' health', target_tile.entity.name, ' name')
+			pass
 	return target_tile.terrain != 'wall' and !target_tile.entity
 
 func create_astar() -> void:
 	var astar = AStarGrid2D.new()
 	var width = level_data[0].tiles.size()
 	var height = level_data.size()
-	print('width ', width, height, 'height')
 	astar.region = Rect2i(0, 0, width, height)
 	astar.cell_size = Vector2(1, 1)
 	astar.update()
@@ -138,24 +141,52 @@ func create_astar() -> void:
 			astar.set_point_solid(pos, solid)
 	astar_grid = astar
 
+var reserved_tiles :Dictionary = {}
+
 func recalculate_path(from, to) -> Array[Vector2i]:
+	var targets = get_available_adjacent_tiles(to)
+	if targets.is_empty():
+		return []
+	targets.sort_custom(func(a, b):
+		return from.distance_to(a) < from.distance_to(b)
+	)
+	var chosen_target = targets[0]
 	var path : Array[Vector2i] = []
-	if astar_grid.is_in_bounds(from.x, from.y) and astar_grid.is_in_bounds(to.x, to.y):
-		path = astar_grid.get_id_path(from, to)
+	if astar_grid.is_in_bounds(from.x, from.y) and astar_grid.is_in_bounds(chosen_target.x, chosen_target.y):
+		path = astar_grid.get_id_path(from, chosen_target)
+		if not reserved_tiles.has(chosen_target):
+			reserved_tiles[chosen_target] = true
 		if path.size() > 1 and path[0] == from:
 			path.remove_at(0)
-			path.pop_back()
+			#path.pop_back()
 	else:
-		print("Missing point in AStar:", from, to)
+		print("Missing point in AStar:", from, chosen_target)
 	return path
+
+func get_adjacent_tiles(pos: Vector2i) -> Array[Vector2i]:
+	return [
+		pos + Vector2i.LEFT,
+		pos + Vector2i.RIGHT,
+		pos + Vector2i.UP,
+		pos + Vector2i.DOWN
+	]
+
+func get_available_adjacent_tiles(player_pos: Vector2i) -> Array[Vector2i]:
+	var options : Array[Vector2i] = []
+	for tile in get_adjacent_tiles(player_pos):
+		if can_entity_move_there(tile):
+			options.append(tile)
+	return options
 
 var pathing_requests : Array[EnemyPathingRequest] = []
 
-func handle_repathing() -> void:
+func handle_path_requests() -> void:
 	if pathing_requests.size() > 0:
-		var request = pathing_requests.pop_front() as EnemyPathingRequest
-		var new_path = recalculate_path(request.from, request.to)
-		request.entity.path = new_path
+		for i in range(pathing_requests.size()):
+			var request = pathing_requests.pop_front() as EnemyPathingRequest
+			var new_path = recalculate_path(request.from, request.to)
+			request.entity.path = new_path
 
 func _process(delta: float) -> void:
-	handle_repathing()
+	reserved_tiles.clear()
+	handle_path_requests()
