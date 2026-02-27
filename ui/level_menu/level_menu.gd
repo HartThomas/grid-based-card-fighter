@@ -32,7 +32,6 @@ func _ready() -> void:
 		boss_container.add_child(boss_option)
 
 func option_clicked(option : Option) -> void:
-	print(option.enemies[0].name)
 	var next_level = load("res://gameplay/level/level.tscn")
 	var level_instance = next_level.instantiate() as LevelScene
 

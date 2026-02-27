@@ -85,7 +85,8 @@ func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 	
 	if data == entity_at_current_position:
 		if !can_entity_move_there(to):
-			print('something is in the way')
+			#print('something is in the way')
+			pass
 		else:
 			level_data[to.y].set_tile_entity(to.x, data)
 			#astar_grid.set_point_solid(to, false)
@@ -102,7 +103,7 @@ func move_enemy(entity: EnemyContainer, from :Vector2i, to: Vector2i) -> bool:
 	
 	if data == entity_at_current_position:
 		if !can_entity_move_there(to):
-			print('something is in the way')
+			#print('something is in the way')
 			entity.path = recalculate_path(entity.current_position, instantiated_player_scene.current_position)
 			return false
 		else:

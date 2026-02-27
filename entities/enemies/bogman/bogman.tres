@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="Enemy" load_steps=4 format=3 uid="uid://bb0t85u0u142k"]
+[gd_resource type="Resource" script_class="Enemy" load_steps=5 format=3 uid="uid://bb0t85u0u142k"]
 
 [ext_resource type="Script" uid="uid://cgtlvr2d8q50r" path="res://entities/enemies/enemy_data.gd" id="1_m8qr4"]
 [ext_resource type="Script" uid="uid://dh54dujmf3tr5" path="res://entities/animated_sprite/sprite_animation/sprite_animation.gd" id="1_x5gnc"]
 [ext_resource type="Resource" uid="uid://vxkxc7x7u78b" path="res://entities/enemies/bogman/animations/idle.tres" id="2_452km"]
+[ext_resource type="Resource" uid="uid://b7bw0qh6l2me8" path="res://entities/enemies/bogman/animations/attack.tres" id="3_452km"]
 
 [resource]
 script = ExtResource("1_m8qr4")
@@ -10,6 +11,7 @@ health = 10
 speed = 1.0
 name = "bogman"
 animations = Dictionary[String, ExtResource("1_x5gnc")]({
+"attack": ExtResource("3_452km"),
 "idle": ExtResource("2_452km")
 })
 metadata/_custom_type_script = "uid://cgtlvr2d8q50r"
