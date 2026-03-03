@@ -26,4 +26,4 @@ func to_sprite_frames(name: String = animation_name, frame_size: Vector2i = Vect
 	return frames
 
 func on_animation_end():
-	pass
+	print('end')

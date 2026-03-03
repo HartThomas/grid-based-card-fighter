@@ -5,7 +5,7 @@ class_name LevelGenerator
 var free_cells : Array[Vector2i] = []
 
 func generate_level(size : Vector2i = Vector2i(50,50)) -> Array[Row]:
-	
+	print('size: ', size)
 	var level_data = create_empty_level(size.y,size.x)
 	create_path([Vector2i(5,0), Vector2i(size.x - 6, size.y -1)],level_data, size)
 	return level_data

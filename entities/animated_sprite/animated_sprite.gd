@@ -15,7 +15,7 @@ func setup() -> void:
 	var data = load(string) as Entity
 	var anim = data.animations[animation_name] as SpriteAnimation
 	frames = anim.to_sprite_frames()
-	animation_finished.connect(anim.on_animation_end)
+	#animation_finished.connect(anim.on_animation_end)
 	sprite_frames = frames
 	animation = '%s_%s' % [sprite_name, animation_name]
 	play(animation)

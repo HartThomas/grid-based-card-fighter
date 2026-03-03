@@ -12,4 +12,5 @@ name = "Bogman Boss"
 id = 0
 enemies = Array[ExtResource("1_w2bov")]([ExtResource("2_yjmcn"), ExtResource("2_yjmcn"), ExtResource("2_yjmcn"), ExtResource("2_yjmcn"), ExtResource("2_yjmcn")])
 loot = Array[ExtResource("2_6kpc3")]([ExtResource("4_vdkvk"), ExtResource("4_vdkvk"), ExtResource("4_vdkvk"), ExtResource("4_vdkvk"), ExtResource("4_vdkvk")])
+size = Vector2i(20, 20)
 metadata/_custom_type_script = "uid://btcgyp1kj3n5v"

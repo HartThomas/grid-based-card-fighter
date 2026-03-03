@@ -9,6 +9,7 @@
 script = ExtResource("1_m8qr4")
 health = 10
 speed = 1.0
+attack_damage = 5
 name = "bogman"
 animations = Dictionary[String, ExtResource("1_x5gnc")]({
 "attack": ExtResource("3_452km"),

@@ -21,9 +21,10 @@ var prev_state = null
 
 func _ready() -> void:
 	if !data:
-		var new_enemy = Enemy.new()
+		var new_enemy = load('res://entities/enemies/bogman/bogman.tres') as Enemy
 		data = new_enemy
 	request_new_path()
+	
 
 func take_damage(amount: int) -> void:
 	data.take_damage(amount)
@@ -36,6 +37,15 @@ func  _process(delta: float) -> void:
 			if recalc_path_timer >= 0.5: # recalc path twice every second
 				recalc_path_timer = 0.0
 				request_new_path()
+			if path.size() > 0 and not CooldownManager.is_on_cooldown(self, "move"):
+				var next_tile = path[0] 
+				if next_tile:
+					var moved = get_parent().move_enemy(self, current_position, next_tile)
+					if moved:
+						path.pop_front()
+				# Start cooldown for movement
+				var move_delay = 1.0 / move_speed
+				CooldownManager.start_cooldown(self, "move", move_delay)
 			if distance_to_player < 64 and not CooldownManager.is_on_cooldown(self, 'attack'):
 				set_state(States.ATTACK)
 		States.ATTACK:
@@ -44,19 +54,8 @@ func  _process(delta: float) -> void:
 		States.IDLE:
 			if distance_to_player < 200:
 				set_state(States.AGGRO)
-	if path.size() > 0 and not CooldownManager.is_on_cooldown(self, "move"):
-		var next_tile = path[0] 
-		if next_tile:
-			var moved = get_parent().move_enemy(self, current_position, next_tile)
-			if moved:
-				path.pop_front()
-		# Start cooldown for movement
-		var move_delay = 1.0 / move_speed
-		CooldownManager.start_cooldown(self, "move", move_delay)
 	recalc_path_timer += delta
-	if recalc_path_timer >= 0.5: # recalc path twice every second
-		recalc_path_timer = 0.0
-		request_new_path()
+
 
 func request_new_path()->void:
 	var req = EnemyPathingRequest.new()
@@ -84,13 +83,13 @@ func _on_state_enter(new_state):
 		States.ATTACK:
 			animated_sprite.animation_name = "attack"
 			animated_sprite.setup()
+			setup()
 			CooldownManager.start_cooldown(self, 'attack', 1.0)
 
-func setup():
-	#super.setup()
+func setup() -> void:
 	if state == States.ATTACK:
 		animated_sprite.animation_finished.connect(post_attack_idle)
 
 func post_attack_idle() :
-	get_parent().enemy_attack(animated_sprite.sprite_data, position)
+	get_parent().enemy_attack(data, position)
 	set_state(States.AGGRO)

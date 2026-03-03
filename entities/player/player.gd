@@ -7,6 +7,6 @@ var current_position : Vector2i = Vector2i(5,0)
 
 func _ready() -> void:
 	if !data:
-		var new_player = PlayerData.new()
+		var new_player = load('res://entities/player/player.tres') as PlayerData
 		data = new_player
 	

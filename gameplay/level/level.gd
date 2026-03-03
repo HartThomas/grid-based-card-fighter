@@ -53,6 +53,7 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 		var enemy_pos : Vector2i = spawn_cells[i]
 		enemy_scene.position = enemy_pos * 32
 		enemy_scene.current_position = enemy_pos
+		enemy_scene.data = enemies[i]
 		add_child(enemy_scene)
 		add_entity_to_tile(enemy_scene.data, enemy_pos)
 
@@ -120,7 +121,6 @@ func move_enemy(entity: EnemyContainer, from :Vector2i, to: Vector2i) -> bool:
 
 func can_entity_move_there(target : Vector2i) -> bool:
 	if target.x < 0 or target.x >= data.size.x or target.y < 0 or target.y >= data.size.y:
-		print('trying to move out of bounds')
 		return false
 	var target_tile = level_data[target.y].get_tile(target.x)
 	if target_tile.entity:
@@ -191,3 +191,8 @@ func handle_path_requests() -> void:
 func _process(delta: float) -> void:
 	reserved_tiles.clear()
 	handle_path_requests()
+
+func enemy_attack(data:Enemy, pos) -> void:
+	if data.has_method('attack'):
+		var damage_to_player = data.attack()
+		instantiated_player_scene.data.take_damage(damage_to_player)

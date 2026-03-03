@@ -8,7 +8,7 @@ signal death
 
 func take_damage(amount: int) -> void:
 	health -= amount
-	if health < 0:
+	if health <= 0:
 		die()
 
 func die() -> void:
