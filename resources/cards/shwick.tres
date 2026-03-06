@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://0uk120bflwpm"]
+
+[ext_resource type="Script" uid="uid://infbnetlxwv7" path="res://gameplay/cards/card_data.gd" id="1_bvubu"]
+
+[resource]
+script = ExtResource("1_bvubu")
+card_name = "Shwick!"
+description = ""
+base_cost = 0
+type = 0
+item = 0
+base_damage = 5
+base_block = 0
+metadata/_custom_type_script = "uid://infbnetlxwv7"

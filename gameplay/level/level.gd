@@ -11,6 +11,13 @@ const ENEMY = preload("res://entities/enemies/enemy.tscn")
 var instantiated_player_scene : EntityContainer
 var key_clicked : bool = false
 var data : Option
+var card_manager : CardManager
+@onready var card_slot1: Control = $CanvasLayer/CardContainer/MarginContainer/CardSlot
+@onready var card_slot2: Control = $CanvasLayer/CardContainer/MarginContainer2/CardSlot
+@onready var card_slot3: Control = $CanvasLayer/CardContainer/MarginContainer3/CardSlot
+var card_scene := preload("res://gameplay/cards/card.tscn")
+
+var card_slots : Array[Control]
 
 func _ready() -> void:
 	var level_generator = generator.new() as LevelGenerator
@@ -21,6 +28,11 @@ func _ready() -> void:
 	add_player()
 	if data.enemies.size() > 0:
 		add_enemies(data.enemies, level_generator)
+	var cm = CardManager.new()
+	card_manager = cm
+	card_slots = [card_slot1, card_slot2, card_slot3]
+	setup_starting_deck()
+	draw_hand()
 
 func fill_tile_map_layer_using_data() -> void:
 	tile_map_layer.clear()
@@ -196,3 +208,18 @@ func enemy_attack(data:Enemy, pos) -> void:
 	if data.has_method('attack'):
 		var damage_to_player = data.attack()
 		instantiated_player_scene.data.take_damage(damage_to_player)
+
+func setup_starting_deck():
+	var shwick_data = preload("res://resources/cards/shwick.tres")
+	for i in 5:
+		var card = CardInstance.new()
+		card.setup(shwick_data)
+		card_manager.cards_owned.append(card)
+		card_manager.add_card_to_deck(card)
+	card_manager.deck.shuffle()
+
+func draw_hand() -> void:
+	var drawn = card_manager.draw_cards(3)
+	for i in range(drawn.size()):
+		var card_node = card_scene.instantiate()
+		card_slots[i].add_child(card_node)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=4 uid="uid://dbtvravtvf04e"]
+[gd_scene load_steps=7 format=4 uid="uid://dbtvravtvf04e"]
 
 [ext_resource type="Script" uid="uid://btvgtg8ut5yer" path="res://gameplay/level/level.gd" id="1_bx172"]
 [ext_resource type="Texture2D" uid="uid://6jlqrlmylpgm" path="res://art/tilesets/wall tileset 2 expanded.png" id="2_rj4uv"]
 [ext_resource type="Script" uid="uid://b2snpp6kycftw" path="res://gameplay/level/camera_2d.gd" id="3_gtsn0"]
+[ext_resource type="Texture2D" uid="uid://dcttafps21e1o" path="res://art/menus/gameplay_gui.png" id="4_m4gmb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rj4uv"]
 texture = ExtResource("2_rj4uv")
@@ -357,3 +358,41 @@ tile_set = SubResource("TileSet_rj4uv")
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(320, 180)
 script = ExtResource("3_gtsn0")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GUI" type="TextureRect" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_m4gmb")
+
+[node name="CardContainer" type="HBoxContainer" parent="CanvasLayer"]
+offset_left = 322.0
+offset_top = 304.0
+offset_right = 633.0
+offset_bottom = 360.0
+theme_override_constants/separation = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/CardContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="CardSlot" type="Control" parent="CanvasLayer/CardContainer/MarginContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/CardContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="CardSlot" type="Control" parent="CanvasLayer/CardContainer/MarginContainer2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/CardContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="CardSlot" type="Control" parent="CanvasLayer/CardContainer/MarginContainer3"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
