@@ -9,6 +9,9 @@ class_name Card
 var base_position : Vector2
 var is_dragging : bool = false
 var mouse_offset : Vector2
+@onready var card_texture: TextureRect = $CardTexture
+signal card_drag_started(data)
+signal card_drag_ended(data)
 
 func _ready() -> void:
 	if not data:
@@ -42,26 +45,29 @@ func _on_card_texture_mouse_exited() -> void:
 	if not is_dragging:
 		if hover_tween:
 			hover_tween.kill()
-
+		card_texture.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hover_tween = create_tween()
+		hover_tween.finished.connect(_return_finished)
 		hover_tween.tween_property(self, "scale", Vector2(1, 1), 0.15)
 		hover_tween.tween_property(self, "position", base_position, 0.15)
+
+func _return_finished():
+	card_texture.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _input(event):
 	if is_dragging and event is InputEventMouseMotion:
 		global_position = get_global_mouse_position() - mouse_offset
 
 func _on_card_texture_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT :
 		if event.pressed:
 			is_dragging = true
+			card_drag_started.emit(data)
 			if hover_tween:
 				hover_tween.kill()
 			mouse_offset = get_global_mouse_position() - global_position
 			print(mouse_offset,' mouse_offset', get_global_mouse_position(), ' get_global_mouse_position')
 		else:
 			is_dragging = false
+			card_drag_ended.emit(data)
 			_on_card_texture_mouse_exited()
-#func _physics_process(delta):
-	#if is_dragging:
-		#global_position = get_global_mouse_position() - mouse_offset

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbryyb6ksepk7"]
+
+[ext_resource type="Script" uid="uid://bg31barv6bx4x" path="res://gameplay/level/highlights/highlight_cell.gd" id="1_31nw6"]
+[ext_resource type="Texture2D" uid="uid://dn43a75i4qtn8" path="res://art/sprites/highlight_cell.png" id="1_43qay"]
+
+[node name="HighlightCell" type="Node2D"]
+visible = false
+script = ExtResource("1_31nw6")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_43qay")

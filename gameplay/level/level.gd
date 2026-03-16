@@ -16,6 +16,7 @@ var card_manager : CardManager
 @onready var card_slot2: Control = $CanvasLayer/CardContainer/MarginContainer2/CardSlot
 @onready var card_slot3: Control = $CanvasLayer/CardContainer/MarginContainer3/CardSlot
 var card_scene := preload("res://gameplay/cards/card.tscn")
+@onready var highlight_cell: Node2D = $TileMapLayer/HighlightCell
 
 var card_slots : Array[Control]
 
@@ -222,4 +223,12 @@ func draw_hand() -> void:
 	var drawn = card_manager.draw_cards(3)
 	for i in range(drawn.size()):
 		var card_node = card_scene.instantiate()
+		card_node.card_drag_started.connect(_on_card_drag_started)
+		card_node.card_drag_ended.connect(_on_card_drag_ended)
 		card_slots[i].add_child(card_node)
+
+func _on_card_drag_started(data : CardInstance) -> void:
+	highlight_cell.show_highlight()
+
+func _on_card_drag_ended(data) -> void:
+	highlight_cell.hide_highlight()
