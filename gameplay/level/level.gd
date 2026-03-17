@@ -16,8 +16,9 @@ var card_manager : CardManager
 @onready var card_slot2: Control = $CanvasLayer/CardContainer/MarginContainer2/CardSlot
 @onready var card_slot3: Control = $CanvasLayer/CardContainer/MarginContainer3/CardSlot
 var card_scene := preload("res://gameplay/cards/card.tscn")
-@onready var highlight_cell: Node2D = $TileMapLayer/HighlightCell
-
+@onready var highlight_cell: CellHighlight = $TileMapLayer/HighlightCell
+var can_player_move : bool = true
+const ATTACK_ANIMATION = preload("res://gameplay/attacks/attack_animation.tscn")
 var card_slots : Array[Control]
 
 func _ready() -> void:
@@ -94,22 +95,23 @@ func _input(event: InputEvent) -> void:
 			key_clicked = false
 
 func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
-	var data = entity.data
-	var entity_at_current_position = level_data[from.y].get_tile(from.x).entity
-	
-	if data == entity_at_current_position:
-		if !can_entity_move_there(to):
-			#print('something is in the way')
-			pass
+	if can_player_move:
+		var data = entity.data
+		var entity_at_current_position = level_data[from.y].get_tile(from.x).entity
+		
+		if data == entity_at_current_position:
+			if !can_entity_move_there(to):
+				#print('something is in the way')
+				pass
+			else:
+				level_data[to.y].set_tile_entity(to.x, data)
+				#astar_grid.set_point_solid(to, false)
+				level_data[from.y].set_tile_entity(from.x, null)
+				#astar_grid.set_point_solid(from, true)
+				entity.position = to * 32
+				entity.current_position = to
 		else:
-			level_data[to.y].set_tile_entity(to.x, data)
-			#astar_grid.set_point_solid(to, false)
-			level_data[from.y].set_tile_entity(from.x, null)
-			#astar_grid.set_point_solid(from, true)
-			entity.position = to * 32
-			entity.current_position = to
-	else:
-		print('The entity ' + str(entity) + ' does not exist at ' + str(from))
+			print('The entity ' + str(entity) + ' does not exist at ' + str(from))
 
 func move_enemy(entity: EnemyContainer, from :Vector2i, to: Vector2i) -> bool:
 	var data = entity.data
@@ -225,10 +227,55 @@ func draw_hand() -> void:
 		var card_node = card_scene.instantiate()
 		card_node.card_drag_started.connect(_on_card_drag_started)
 		card_node.card_drag_ended.connect(_on_card_drag_ended)
+		card_node.card_played.connect(_on_card_played)
 		card_slots[i].add_child(card_node)
 
-func _on_card_drag_started(data : CardInstance) -> void:
+func _on_card_drag_started() -> void:
 	highlight_cell.show_highlight()
+	can_player_move = false
 
-func _on_card_drag_ended(data) -> void:
-	highlight_cell.hide_highlight()
+var target_highlighted : Vector2i
+var target_dir : Vector2i
+
+func _on_card_drag_ended() -> void:
+	var targets : Array[Vector2i] = highlight_cell.hide_highlight()
+	can_player_move = true
+	print(targets)
+	target_highlighted = targets[0]
+	target_dir = targets[1]
+
+func _on_card_played(card:CardInstance)->void:
+	print('card played')
+	var attack_scene = ATTACK_ANIMATION.instantiate()
+	attack_scene.attack_finished.connect(attack_damage)
+	add_child(attack_scene)
+	attack_scene._setup(card,target_highlighted,target_dir)
+
+func attack_damage(data:CardInstance)-> void:
+	var tiles = get_target_tiles(instantiated_player_scene.current_position,target_dir,data.data.attack_pattern)
+	for tile in tiles:
+		var target = level_data[tile.y].get_tile(tile.x)
+		if target.entity:
+			target.entity.take_damage(data.get_damage())
+			print(target.entity.health)
+	
+
+func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
+	var tiles : Array[Vector2i] = []
+	for offset in pattern:
+		var rotated = rotate_pattern(offset, direction)
+		tiles.append(origin + rotated)
+	return tiles
+
+func rotate_pattern(offset: Vector2i, dir: Vector2i) -> Vector2i:
+	match dir:
+		Vector2i.RIGHT:
+			return offset
+		Vector2i.LEFT:
+			return Vector2i(-offset.x, -offset.y)
+		Vector2i.DOWN:
+			return Vector2i(-offset.y, offset.x)
+		Vector2i.UP:
+			return Vector2i(offset.y, -offset.x)
+		_:
+			return offset

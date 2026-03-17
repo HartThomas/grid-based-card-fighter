@@ -10,8 +10,9 @@ var base_position : Vector2
 var is_dragging : bool = false
 var mouse_offset : Vector2
 @onready var card_texture: TextureRect = $CardTexture
-signal card_drag_started(data)
-signal card_drag_ended(data)
+signal card_drag_started()
+signal card_drag_ended()
+signal card_played(data)
 
 func _ready() -> void:
 	if not data:
@@ -59,15 +60,23 @@ func _input(event):
 		global_position = get_global_mouse_position() - mouse_offset
 
 func _on_card_texture_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT :
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		if event.pressed:
+			if is_dragging:
+				is_dragging = false
+				card_drag_ended.emit()
+				_on_card_texture_mouse_exited()
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT :
 		if event.pressed:
 			is_dragging = true
-			card_drag_started.emit(data)
+			card_drag_started.emit()
 			if hover_tween:
 				hover_tween.kill()
 			mouse_offset = get_global_mouse_position() - global_position
 			print(mouse_offset,' mouse_offset', get_global_mouse_position(), ' get_global_mouse_position')
 		else:
-			is_dragging = false
-			card_drag_ended.emit(data)
-			_on_card_texture_mouse_exited()
+			if is_dragging:
+				is_dragging = false
+				card_drag_ended.emit()
+				_on_card_texture_mouse_exited()
+				card_played.emit(data)
