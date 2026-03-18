@@ -67,11 +67,13 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 		var enemy_pos : Vector2i = spawn_cells[i]
 		enemy_scene.position = enemy_pos * 32
 		enemy_scene.current_position = enemy_pos
-		enemy_scene.data = enemies[i].duplicate(true)
+		var instance = EnemyInstance.new()
+		instance.setup(enemies[i])
+		enemy_scene.data = instance
 		add_child(enemy_scene)
 		add_entity_to_tile(enemy_scene.data, enemy_pos)
 
-func add_entity_to_tile(entity: Entity, tile :Vector2i) ->void:
+func add_entity_to_tile(entity: EntityInstance, tile :Vector2i) ->void:
 	level_data[tile.y].set_tile_entity(tile.x,entity)
 
 func _input(event: InputEvent) -> void:
@@ -139,7 +141,7 @@ func can_entity_move_there(target : Vector2i) -> bool:
 		return false
 	var target_tile = level_data[target.y].get_tile(target.x)
 	if target_tile.entity:
-		if not target_tile.entity.name:
+		if not target_tile.entity.has_method('get_data'):
 			pass
 	return target_tile.terrain != 'wall' and !target_tile.entity
 
@@ -207,9 +209,9 @@ func _process(delta: float) -> void:
 	reserved_tiles.clear()
 	handle_path_requests()
 
-func enemy_attack(data:Enemy, pos) -> void:
-	if data.has_method('attack'):
-		var damage_to_player = data.attack()
+func enemy_attack(data:EnemyInstance, pos) -> void:
+	if data.has_method('get_attack_damage'):
+		var damage_to_player = data.get_attack_damage()
 		instantiated_player_scene.data.take_damage(damage_to_player)
 
 func setup_starting_deck():
@@ -256,7 +258,7 @@ func attack_damage(data:CardInstance)-> void:
 		var target = level_data[tile.y].get_tile(tile.x)
 		if target.entity:
 			target.entity.take_damage(data.get_damage())
-			print(target.entity.health)
+			print(target.entity.get_current_health())
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
 	var tiles : Array[Vector2i] = []

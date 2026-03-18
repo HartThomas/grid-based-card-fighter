@@ -3,7 +3,7 @@ extends Node2D
 class_name EnemyContainer
 
 var recalc_path_timer: float = 0.0
-@export var data : Enemy
+@export var data : EnemyInstance
 var current_position : Vector2i = Vector2i(5,0)
 var path: Array[Vector2i] = []
 var move_speed : float = 5.0
@@ -22,7 +22,9 @@ var prev_state = null
 func _ready() -> void:
 	if !data:
 		var new_enemy = load('res://entities/enemies/bogman/bogman.tres') as Enemy
-		data = new_enemy
+		var instance = EnemyInstance.new()
+		instance.setup(new_enemy)
+		data = instance
 	request_new_path()
 	
 
