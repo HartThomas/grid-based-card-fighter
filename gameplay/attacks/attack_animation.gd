@@ -7,7 +7,6 @@ func _setup(data: CardInstance, target_cell : Vector2i, direction: Vector2i) -> 
 	animation = CardEnums.item.keys()[attack_type].to_lower()
 	play()
 	var card_data = data.data
-	print(target_cell)
 	global_position = target_cell * 32
 	if card_data.rotate_to_direction:
 		rotation = direction_to_rotation(direction)

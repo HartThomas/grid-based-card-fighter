@@ -67,7 +67,7 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 		var enemy_pos : Vector2i = spawn_cells[i]
 		enemy_scene.position = enemy_pos * 32
 		enemy_scene.current_position = enemy_pos
-		enemy_scene.data = enemies[i]
+		enemy_scene.data = enemies[i].duplicate(true)
 		add_child(enemy_scene)
 		add_entity_to_tile(enemy_scene.data, enemy_pos)
 
@@ -230,7 +230,8 @@ func draw_hand() -> void:
 		card_node.card_played.connect(_on_card_played)
 		card_slots[i].add_child(card_node)
 
-func _on_card_drag_started() -> void:
+func _on_card_drag_started(data:CardInstance) -> void:
+	highlight_cell._setup(CardEnums.item.keys()[data.get_item()].to_lower())
 	highlight_cell.show_highlight()
 	can_player_move = false
 
@@ -240,12 +241,10 @@ var target_dir : Vector2i
 func _on_card_drag_ended() -> void:
 	var targets : Array[Vector2i] = highlight_cell.hide_highlight()
 	can_player_move = true
-	print(targets)
 	target_highlighted = targets[0]
 	target_dir = targets[1]
 
 func _on_card_played(card:CardInstance)->void:
-	print('card played')
 	var attack_scene = ATTACK_ANIMATION.instantiate()
 	attack_scene.attack_finished.connect(attack_damage)
 	add_child(attack_scene)
@@ -258,7 +257,6 @@ func attack_damage(data:CardInstance)-> void:
 		if target.entity:
 			target.entity.take_damage(data.get_damage())
 			print(target.entity.health)
-	
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
 	var tiles : Array[Vector2i] = []

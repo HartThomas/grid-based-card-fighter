@@ -5,6 +5,13 @@ class_name CellHighlight
 var showing : bool = false
 var target_cell : Vector2i
 var direction : Vector2i
+@onready var sprite_2d: Sprite2D = $Sprite2D
+
+func _setup(item: String)->void:
+	var new_texture = load("res://art/sprites/%s_highlight_cell.png" % [item])
+	sprite_2d.texture = new_texture
+	var rotation = rotate_pattern(direction)
+	sprite_2d.rotation = rotation
 
 func _process(delta: float) -> void:
 	if showing:
@@ -17,9 +24,11 @@ func _process(delta: float) -> void:
 			grid_dir = Vector2i(sign(dir.x), 0)
 		else:
 			grid_dir = Vector2i(0, sign(dir.y))
-		direction = grid_dir
+		if grid_dir != direction:
+			var rotation = rotate_pattern(grid_dir)
+			sprite_2d.rotation = rotation
+			direction = grid_dir
 		var target : Vector2i = player.current_position + grid_dir
-		print(target, ' target')
 		target_cell = target
 		position = target * 32 + Vector2i(16,16)
 
@@ -30,5 +39,17 @@ func show_highlight() -> void:
 func hide_highlight()-> Array[Vector2i]:
 	showing = false
 	hide()
-	print(target_cell, ' in hide')
 	return [target_cell, direction]
+
+func rotate_pattern( dir: Vector2i) -> float:
+	match dir:
+		Vector2i.RIGHT:
+			return deg_to_rad(0)
+		Vector2i.LEFT:
+			return deg_to_rad(180)
+		Vector2i.DOWN:
+			return deg_to_rad(90)
+		Vector2i.UP:
+			return deg_to_rad(270)
+		_:
+			return deg_to_rad(0)
