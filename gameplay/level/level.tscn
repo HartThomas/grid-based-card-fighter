@@ -365,9 +365,25 @@ script = ExtResource("3_gtsn0")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="GUI" type="TextureRect" parent="CanvasLayer"]
+texture_filter = 1
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("4_m4gmb")
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GUI"]
+layout_mode = 0
+offset_left = 267.0
+offset_top = 307.0
+offset_right = 315.0
+offset_bottom = 328.0
+
+[node name="Label" type="Label" parent="CanvasLayer/GUI/TextureButton"]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 21.0
+text = "Draw"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CardContainer" type="HBoxContainer" parent="CanvasLayer"]
 offset_left = 322.0
@@ -399,3 +415,5 @@ theme_override_constants/margin_left = 10
 [node name="CardSlot" type="Control" parent="CanvasLayer/CardContainer/MarginContainer3"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
+
+[connection signal="pressed" from="CanvasLayer/GUI/TextureButton" to="." method="_on_draw_button_pressed"]

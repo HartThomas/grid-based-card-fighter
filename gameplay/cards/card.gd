@@ -12,7 +12,7 @@ var mouse_offset : Vector2
 @onready var card_texture: TextureRect = $CardTexture
 signal card_drag_started(data)
 signal card_drag_ended()
-signal card_played(data)
+signal card_played(data, card)
 
 func _ready() -> void:
 	if not data:
@@ -79,4 +79,4 @@ func _on_card_texture_gui_input(event: InputEvent) -> void:
 				is_dragging = false
 				card_drag_ended.emit()
 				_on_card_texture_mouse_exited()
-				card_played.emit(data)
+				card_played.emit(data, self)

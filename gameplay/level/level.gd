@@ -230,6 +230,7 @@ func draw_hand() -> void:
 		card_node.card_drag_started.connect(_on_card_drag_started)
 		card_node.card_drag_ended.connect(_on_card_drag_ended)
 		card_node.card_played.connect(_on_card_played)
+		card_node.data = drawn[i]
 		card_slots[i].add_child(card_node)
 
 func _on_card_drag_started(data:CardInstance) -> void:
@@ -246,11 +247,13 @@ func _on_card_drag_ended() -> void:
 	target_highlighted = targets[0]
 	target_dir = targets[1]
 
-func _on_card_played(card:CardInstance)->void:
+func _on_card_played(card:CardInstance,card_instantia:Card)->void:
 	var attack_scene = ATTACK_ANIMATION.instantiate()
 	attack_scene.attack_finished.connect(attack_damage)
 	add_child(attack_scene)
 	attack_scene._setup(card,target_highlighted,target_dir)
+	card_instantia.queue_free()
+	card_manager.use_card(card)
 
 func attack_damage(data:CardInstance)-> void:
 	var tiles = get_target_tiles(instantiated_player_scene.current_position,target_dir,data.data.attack_pattern)
@@ -279,3 +282,13 @@ func rotate_pattern(offset: Vector2i, dir: Vector2i) -> Vector2i:
 			return Vector2i(offset.y, -offset.x)
 		_:
 			return offset
+
+
+func _on_draw_button_pressed() -> void:
+	for card_slot in card_slots:
+		var card : Card = card_slot.get_child(0)
+		if card:
+			card_manager.discard_card(card.data)
+			card.queue_free()
+	if card_manager.hand.size() == 0:
+		draw_hand()
