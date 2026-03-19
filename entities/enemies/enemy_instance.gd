@@ -4,7 +4,7 @@ class_name EnemyInstance
 
 var damage_modifier : int = 0
 var damage_taken : int = 0
-signal die()
+signal die(d)
 
 func setup(enemy_data: Enemy):
 	data = enemy_data
@@ -23,5 +23,6 @@ func buff_damage(amount: int) ->void:
 
 func take_damage(amount: int) -> void:
 	damage_taken += amount
+	print(get_current_health())
 	if damage_taken >= get_starting_health():
-		die.emit()
+		die.emit(self)

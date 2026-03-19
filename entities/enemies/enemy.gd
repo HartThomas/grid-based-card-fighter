@@ -9,6 +9,7 @@ var path: Array[Vector2i] = []
 var move_speed : float = 5.0
 var move_delay: float
 @onready var animated_sprite: AnimatedEntity = $AnimatedSprite
+signal die(data,pos)
 
 enum States {
 	IDLE,
@@ -25,6 +26,8 @@ func _ready() -> void:
 		var instance = EnemyInstance.new()
 		instance.setup(new_enemy)
 		data = instance
+	if data:
+		data.die.connect(_die)
 	request_new_path()
 	
 
@@ -95,3 +98,8 @@ func setup() -> void:
 func post_attack_idle() :
 	get_parent().enemy_attack(data, position)
 	set_state(States.AGGRO)
+
+func _die(data:EnemyInstance) ->void:
+	die.emit(data,current_position)
+	queue_free()
+	

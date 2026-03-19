@@ -70,8 +70,13 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 		var instance = EnemyInstance.new()
 		instance.setup(enemies[i])
 		enemy_scene.data = instance
+		enemy_scene.die.connect(enemy_killed)
 		add_child(enemy_scene)
 		add_entity_to_tile(enemy_scene.data, enemy_pos)
+
+func enemy_killed(enemy:EnemyInstance, position: Vector2i)-> void:
+	level_data[position.y].set_tile_entity(position.x,null)
+	
 
 func add_entity_to_tile(entity: EntityInstance, tile :Vector2i) ->void:
 	level_data[tile.y].set_tile_entity(tile.x,entity)
@@ -103,7 +108,7 @@ func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 		
 		if data == entity_at_current_position:
 			if !can_entity_move_there(to):
-				#print('something is in the way')
+				print('something is in the way')
 				pass
 			else:
 				level_data[to.y].set_tile_entity(to.x, data)
@@ -142,7 +147,10 @@ func can_entity_move_there(target : Vector2i) -> bool:
 	var target_tile = level_data[target.y].get_tile(target.x)
 	if target_tile.entity:
 		if not target_tile.entity.has_method('get_data'):
+			print(' bonk')
 			pass
+	#print( target, ' target')
+	#target_tile.terrain != 'wall', !target_tile.entity,' ', target_tile.entity,
 	return target_tile.terrain != 'wall' and !target_tile.entity
 
 func create_astar() -> void:
@@ -261,7 +269,7 @@ func attack_damage(data:CardInstance)-> void:
 		var target = level_data[tile.y].get_tile(tile.x)
 		if target.entity:
 			target.entity.take_damage(data.get_damage())
-			print(target.entity.get_current_health())
+			
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
 	var tiles : Array[Vector2i] = []
