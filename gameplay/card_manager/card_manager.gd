@@ -63,3 +63,9 @@ func start_combat() -> void:
 	hand.clear()
 	spent.clear()
 	deck.shuffle()
+
+func get_number_of_cards_deck() -> int:
+	return deck.size()
+
+func get_number_of_cards_spent() -> int:
+	return spent.size()

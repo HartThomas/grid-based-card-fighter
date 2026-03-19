@@ -250,6 +250,7 @@ func draw_hand() -> void:
 		card_node.card_played.connect(_on_card_played)
 		card_node.data = drawn[i]
 		card_slots[i].add_child(card_node)
+	update_pile_feedback()
 
 func _on_card_drag_started(data:CardInstance) -> void:
 	highlight_cell._setup(CardEnums.item.keys()[data.get_item()].to_lower())
@@ -272,6 +273,7 @@ func _on_card_played(card:CardInstance,card_instantia:Card)->void:
 	attack_scene._setup(card,target_highlighted,target_dir)
 	card_instantia.queue_free()
 	card_manager.use_card(card)
+	update_pile_feedback()
 
 func attack_damage(data:CardInstance)-> void:
 	var tiles = get_target_tiles(instantiated_player_scene.current_position,target_dir,data.data.attack_pattern)
@@ -301,7 +303,6 @@ func rotate_pattern(offset: Vector2i, dir: Vector2i) -> Vector2i:
 		_:
 			return offset
 
-
 func _on_draw_button_pressed() -> void:
 	for card_slot in card_slots:
 		var card : Card = card_slot.get_child(0)
@@ -311,12 +312,38 @@ func _on_draw_button_pressed() -> void:
 	if card_manager.hand.size() == 0:
 		draw_hand()
 
-
 func _on_health_bar_mouse_entered() -> void:
 	var label = health_bar.get_child(0)
 	label.show()
 
-
 func _on_health_bar_mouse_exited() -> void:
 	var label = health_bar.get_child(0)
+	label.hide()
+
+
+@onready var spent: TextureRect = $CanvasLayer/GUI/Spent
+@onready var deck: TextureRect = $CanvasLayer/GUI/Deck
+
+func update_pile_feedback() ->void:
+	var cards_in_deck = card_manager.get_number_of_cards_deck()
+	var label :Label = deck.get_child(0)
+	label.text = str(cards_in_deck)
+	var cards_in_spent = card_manager.get_number_of_cards_spent()
+	var spent_label :Label = spent.get_child(0)
+	spent_label.text = str(cards_in_spent)
+
+func _on_spent_mouse_entered() -> void:
+	var label = spent.get_child(1)
+	label.show()
+
+func _on_spent_mouse_exited() -> void:
+	var label = spent.get_child(1)
+	label.hide()
+
+func _on_deck_mouse_entered() -> void:
+	var label = deck.get_child(1)
+	label.show()
+
+func _on_deck_mouse_exited() -> void:
+	var label = deck.get_child(1)
 	label.hide()
