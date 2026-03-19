@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=4 uid="uid://dbtvravtvf04e"]
+[gd_scene load_steps=11 format=4 uid="uid://dbtvravtvf04e"]
 
 [ext_resource type="Script" uid="uid://btvgtg8ut5yer" path="res://gameplay/level/level.gd" id="1_bx172"]
 [ext_resource type="Texture2D" uid="uid://6jlqrlmylpgm" path="res://art/tilesets/wall tileset 2 expanded.png" id="2_rj4uv"]
 [ext_resource type="Script" uid="uid://b2snpp6kycftw" path="res://gameplay/level/camera_2d.gd" id="3_gtsn0"]
 [ext_resource type="PackedScene" uid="uid://dbryyb6ksepk7" path="res://gameplay/level/highlights/highlight_cell.tscn" id="3_l4jmg"]
 [ext_resource type="Texture2D" uid="uid://dcttafps21e1o" path="res://art/menus/gameplay_gui.png" id="4_m4gmb"]
+[ext_resource type="Texture2D" uid="uid://yc3gvjx1hecy" path="res://art/sprites/healthbar_under.png" id="6_seu3u"]
+[ext_resource type="Texture2D" uid="uid://b23ojbrpheh6t" path="res://art/sprites/healthbar_over.png" id="7_p63k6"]
+[ext_resource type="Texture2D" uid="uid://b65kfplj7m7ou" path="res://art/sprites/healthbar_progress.png" id="8_p1gxc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rj4uv"]
 texture = ExtResource("2_rj4uv")
@@ -385,6 +388,29 @@ text = "Draw"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="HealthBar" type="TextureProgressBar" parent="CanvasLayer/GUI"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 313.0
+offset_right = 48.0
+offset_bottom = 353.0
+max_value = 50.0
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_seu3u")
+texture_over = ExtResource("7_p63k6")
+texture_progress = ExtResource("8_p1gxc")
+
+[node name="HealthBarLabel" type="Label" parent="CanvasLayer/GUI/HealthBar"]
+visible = false
+layout_mode = 0
+offset_left = 22.0
+offset_top = 13.0
+offset_right = 71.0
+offset_bottom = 29.0
+theme_override_colors/font_color = Color(0.270588, 0.156863, 0.235294, 1)
+text = "50/50"
+
 [node name="CardContainer" type="HBoxContainer" parent="CanvasLayer"]
 offset_left = 322.0
 offset_top = 304.0
@@ -417,3 +443,5 @@ custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 
 [connection signal="pressed" from="CanvasLayer/GUI/TextureButton" to="." method="_on_draw_button_pressed"]
+[connection signal="mouse_entered" from="CanvasLayer/GUI/HealthBar" to="." method="_on_health_bar_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/GUI/HealthBar" to="." method="_on_health_bar_mouse_exited"]

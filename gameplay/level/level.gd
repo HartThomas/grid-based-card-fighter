@@ -20,6 +20,7 @@ var card_scene := preload("res://gameplay/cards/card.tscn")
 var can_player_move : bool = true
 const ATTACK_ANIMATION = preload("res://gameplay/attacks/attack_animation.tscn")
 var card_slots : Array[Control]
+@onready var health_bar: TextureProgressBar = $CanvasLayer/GUI/HealthBar
 
 func _ready() -> void:
 	var level_generator = generator.new() as LevelGenerator
@@ -58,6 +59,15 @@ func add_player()-> void:
 	add_child(player_scene)
 	add_entity_to_tile(player_scene.data, player_pos)
 	instantiated_player_scene = player_scene
+	update_health_bar()
+
+func update_health_bar() ->void:
+	var player : PlayerInstance = instantiated_player_scene.data
+	health_bar.max_value = player.get_starting_health()
+	health_bar.value = player.get_current_health()
+	print('health: ',player.get_current_health())
+	var label = health_bar.get_child(0)
+	label.text = str(player.get_current_health()) + '/' + str(player.get_starting_health())
 
 func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 	var random_tile = level_generator.random_free_cell(1)
@@ -74,9 +84,8 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 		add_child(enemy_scene)
 		add_entity_to_tile(enemy_scene.data, enemy_pos)
 
-func enemy_killed(enemy:EnemyInstance, position: Vector2i)-> void:
-	level_data[position.y].set_tile_entity(position.x,null)
-	
+func enemy_killed(enemy:EnemyInstance, pos: Vector2i)-> void:
+	level_data[pos.y].set_tile_entity(pos.x,null)
 
 func add_entity_to_tile(entity: EntityInstance, tile :Vector2i) ->void:
 	level_data[tile.y].set_tile_entity(tile.x,entity)
@@ -213,14 +222,15 @@ func handle_path_requests() -> void:
 			var new_path = recalculate_path(request.from, request.to)
 			request.entity.path = new_path
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	reserved_tiles.clear()
 	handle_path_requests()
 
-func enemy_attack(data:EnemyInstance, pos) -> void:
+func enemy_attack(data:EnemyInstance, _pos) -> void:
 	if data.has_method('get_attack_damage'):
 		var damage_to_player = data.get_attack_damage()
 		instantiated_player_scene.data.take_damage(damage_to_player)
+		update_health_bar()
 
 func setup_starting_deck():
 	var shwick_data = preload("res://resources/cards/shwick.tres")
@@ -300,3 +310,13 @@ func _on_draw_button_pressed() -> void:
 			card.queue_free()
 	if card_manager.hand.size() == 0:
 		draw_hand()
+
+
+func _on_health_bar_mouse_entered() -> void:
+	var label = health_bar.get_child(0)
+	label.show()
+
+
+func _on_health_bar_mouse_exited() -> void:
+	var label = health_bar.get_child(0)
+	label.hide()
