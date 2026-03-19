@@ -33,6 +33,7 @@ func _ready() -> void:
 		add_enemies(data.enemies, level_generator)
 	var cm = CardManager.new()
 	card_manager = cm
+	card_manager.card_drawn.connect(update_pile_feedback)
 	card_slots = [card_slot1, card_slot2, card_slot3]
 	setup_starting_deck()
 	draw_hand()
@@ -240,6 +241,7 @@ func setup_starting_deck():
 		card_manager.cards_owned.append(card)
 		card_manager.add_card_to_deck(card)
 	card_manager.deck.shuffle()
+	update_pile_feedback()
 
 func draw_hand() -> void:
 	var drawn = card_manager.draw_cards(3)
@@ -320,6 +322,7 @@ func _on_health_bar_mouse_exited() -> void:
 	var label = health_bar.get_child(0)
 	label.hide()
 
+@onready var effort_bar: TextureProgressBar = $CanvasLayer/GUI/EffortBar
 
 @onready var spent: TextureRect = $CanvasLayer/GUI/Spent
 @onready var deck: TextureRect = $CanvasLayer/GUI/Deck
@@ -346,4 +349,14 @@ func _on_deck_mouse_entered() -> void:
 
 func _on_deck_mouse_exited() -> void:
 	var label = deck.get_child(1)
+	label.hide()
+
+
+func _on_effort_bar_mouse_entered() -> void:
+	var label = effort_bar.get_child(0)
+	label.show()
+
+
+func _on_effort_bar_mouse_exited() -> void:
+	var label = effort_bar.get_child(0)
 	label.hide()

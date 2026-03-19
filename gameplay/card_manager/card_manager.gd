@@ -6,6 +6,7 @@ class_name CardManager
 @export var deck : Array[CardInstance] = []
 @export var hand : Array[CardInstance] = []
 @export var spent : Array[CardInstance] = []
+signal card_drawn
 
 func draw_card() -> CardInstance:
 	if deck.is_empty():
