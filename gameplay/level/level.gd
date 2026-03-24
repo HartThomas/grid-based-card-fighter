@@ -61,6 +61,7 @@ func add_player()-> void:
 	add_entity_to_tile(player_scene.data, player_pos)
 	instantiated_player_scene = player_scene
 	update_health_bar()
+	update_effort_bar()
 
 func update_health_bar() ->void:
 	var player : PlayerInstance = instantiated_player_scene.data
@@ -269,13 +270,21 @@ func _on_card_drag_ended() -> void:
 	target_dir = targets[1]
 
 func _on_card_played(card:CardInstance,card_instantia:Card)->void:
-	var attack_scene = ATTACK_ANIMATION.instantiate()
-	attack_scene.attack_finished.connect(attack_damage)
-	add_child(attack_scene)
-	attack_scene._setup(card,target_highlighted,target_dir)
-	card_instantia.queue_free()
-	card_manager.use_card(card)
-	update_pile_feedback()
+	if can_card_be_played(card):
+		var player = instantiated_player_scene.data
+		player.spend_effort(card.get_cost())
+		var attack_scene = ATTACK_ANIMATION.instantiate()
+		attack_scene.attack_finished.connect(attack_damage)
+		add_child(attack_scene)
+		attack_scene._setup(card,target_highlighted,target_dir)
+		card_instantia.queue_free()
+		card_manager.use_card(card)
+		update_pile_feedback()
+		update_effort_bar()
+
+func can_card_be_played(card: CardInstance)-> bool:
+	var player = instantiated_player_scene.data
+	return player.get_current_effort() - card.get_cost() >= 0
 
 func attack_damage(data:CardInstance)-> void:
 	var tiles = get_target_tiles(instantiated_player_scene.current_position,target_dir,data.data.attack_pattern)
@@ -307,7 +316,7 @@ func rotate_pattern(offset: Vector2i, dir: Vector2i) -> Vector2i:
 
 func _on_draw_button_pressed() -> void:
 	for card_slot in card_slots:
-		var card : Card = card_slot.get_child(0)
+		var card : Card = card_slot.get_child(0) if card_slot.get_children().size() > 0 else null
 		if card:
 			card_manager.discard_card(card.data)
 			card.queue_free()
@@ -351,11 +360,17 @@ func _on_deck_mouse_exited() -> void:
 	var label = deck.get_child(1)
 	label.hide()
 
+func update_effort_bar() ->void:
+	var player : PlayerInstance = instantiated_player_scene.data
+	effort_bar.max_value = player.get_starting_effort()
+	effort_bar.value = player.get_current_effort()
+	#print('health: ',player.get_current_health())
+	var label = effort_bar.get_child(0)
+	label.text = str(player.get_current_effort()) + '/' + str(player.get_starting_effort())
 
 func _on_effort_bar_mouse_entered() -> void:
 	var label = effort_bar.get_child(0)
 	label.show()
-
 
 func _on_effort_bar_mouse_exited() -> void:
 	var label = effort_bar.get_child(0)

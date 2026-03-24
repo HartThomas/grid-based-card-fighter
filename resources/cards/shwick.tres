@@ -6,7 +6,7 @@
 script = ExtResource("1_bvubu")
 card_name = "Shwick!"
 description = ""
-base_cost = 0
+base_cost = 2
 type = 0
 item = 0
 base_damage = 5

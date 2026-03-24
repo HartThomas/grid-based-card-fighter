@@ -3,6 +3,7 @@ extends Entity
 class_name PlayerData
 
 @export var health : int
+@export var effort : int
 
 signal death
 

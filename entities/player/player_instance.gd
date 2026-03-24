@@ -4,10 +4,12 @@ class_name PlayerInstance
 
 var damage_modifier : int = 0
 var damage_taken : int = 0
+var effort_spent :int = 0
 signal die()
+signal exhausted()
 
-func setup(enemy_data: PlayerData):
-	data = enemy_data
+func setup(player_data: PlayerData):
+	data = player_data
 
 func get_starting_health() ->  int:
 	return data.health
@@ -25,3 +27,14 @@ func take_damage(amount: int) -> void:
 	damage_taken += amount
 	if damage_taken >= get_starting_health():
 		die.emit()
+
+func get_starting_effort()->int:
+	return data.effort
+
+func get_current_effort()-> int:
+	return get_starting_effort() - effort_spent
+
+func spend_effort(amount: int) ->void:
+	effort_spent += amount
+	if get_current_effort() <= 0:
+		exhausted.emit()

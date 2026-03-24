@@ -14,7 +14,8 @@ signal die(data,pos)
 enum States {
 	IDLE,
 	AGGRO,
-	ATTACK
+	ATTACK,
+	COWARD
 }
 
 var state = States.IDLE
@@ -35,10 +36,9 @@ func take_damage(amount: int) -> void:
 	data.take_damage(amount)
 
 func  _process(delta: float) -> void:
-	var distance_to_player = position.distance_to(get_parent().instantiated_player_scene.position)
+	var distance_to_player = position.distance_to(get_player_pos())
 	match state: 
 		States.AGGRO:
-			recalc_path_timer += delta
 			if recalc_path_timer >= 0.5: # recalc path twice every second
 				recalc_path_timer = 0.0
 				request_new_path()
@@ -49,7 +49,7 @@ func  _process(delta: float) -> void:
 					if moved:
 						path.pop_front()
 				# Start cooldown for movement
-				var move_delay = 1.0 / move_speed
+				move_delay = 1.0 / move_speed
 				CooldownManager.start_cooldown(self, "move", move_delay)
 			if distance_to_player < 64 and not CooldownManager.is_on_cooldown(self, 'attack'):
 				set_state(States.ATTACK)
@@ -61,6 +61,8 @@ func  _process(delta: float) -> void:
 				set_state(States.AGGRO)
 	recalc_path_timer += delta
 
+func get_player_pos()-> Vector2:
+	return get_parent().instantiated_player_scene.position
 
 func request_new_path()->void:
 	var req = EnemyPathingRequest.new()
