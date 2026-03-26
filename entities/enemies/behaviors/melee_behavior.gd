@@ -1,21 +1,17 @@
 extends EnemyBehavior
 
-class_name RangedBehavior
+class_name MeleeBehavior
 
 func get_intent(enemy: EnemyContainer):
 	var distance = enemy.position.distance_to(enemy.get_player_pos())
 	
 	match enemy.state:
 		enemy.States.ATTACK:
-			if distance < 100:
-				enemy.set_state(enemy.States.COWARD)
-			elif distance > 200:
+			if distance >= 64:
 				enemy.set_state(enemy.States.AGGRO)
 		enemy.States.IDLE:
-			if distance < 250:
+			if distance < 200:
 				enemy.set_state(enemy.States.AGGRO)
 		enemy.States.AGGRO:
-			if distance > 100 and distance <200:
+			if distance < 64:
 				enemy.set_state(enemy.States.ATTACK)
-			elif distance >200:
-				enemy.set_state(enemy.States.AGGRO)

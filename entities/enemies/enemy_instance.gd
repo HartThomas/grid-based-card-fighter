@@ -26,3 +26,6 @@ func take_damage(amount: int) -> void:
 	print(get_current_health())
 	if damage_taken >= get_starting_health():
 		die.emit(self)
+
+func get_behavior() -> EnemyBehavior:
+	return data.behavior

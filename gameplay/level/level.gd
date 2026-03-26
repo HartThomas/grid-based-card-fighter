@@ -50,7 +50,7 @@ func fill_tile_map_layer_using_data() -> void:
 				tile_map_layer.set_cell(Vector2i(x,y),1,Vector2i(0,3))
 				cells.append(Vector2i(x,y))
 			if terrain == 'empty':
-				continue
+				tile_map_layer.set_cell(Vector2i(x,y),1,Vector2i(10,1))
 	tile_map_layer.set_cells_terrain_connect(cells,0,0)
 
 func add_player()-> void:

@@ -9,6 +9,7 @@ var path: Array[Vector2i] = []
 var move_speed : float = 5.0
 var move_delay: float
 @onready var animated_sprite: AnimatedEntity = $AnimatedSprite
+
 signal die(data,pos)
 
 enum States {
@@ -24,6 +25,7 @@ var prev_state = null
 func _ready() -> void:
 	if !data:
 		var new_enemy = load('res://entities/enemies/bogman/bogman.tres') as Enemy
+		print(new_enemy.behavior, '    ghggh')
 		var instance = EnemyInstance.new()
 		instance.setup(new_enemy)
 		data = instance
@@ -36,6 +38,9 @@ func take_damage(amount: int) -> void:
 	data.take_damage(amount)
 
 func  _process(delta: float) -> void:
+	var behavior = data.get_behavior()
+	if behavior:
+		behavior.get_intent(self)
 	var distance_to_player = position.distance_to(get_player_pos())
 	match state: 
 		States.AGGRO:
@@ -51,14 +56,6 @@ func  _process(delta: float) -> void:
 				# Start cooldown for movement
 				move_delay = 1.0 / move_speed
 				CooldownManager.start_cooldown(self, "move", move_delay)
-			if distance_to_player < 64 and not CooldownManager.is_on_cooldown(self, 'attack'):
-				set_state(States.ATTACK)
-		States.ATTACK:
-			if distance_to_player >= 64:
-				set_state(States.AGGRO)
-		States.IDLE:
-			if distance_to_player < 200:
-				set_state(States.AGGRO)
 	recalc_path_timer += delta
 
 func get_player_pos()-> Vector2:

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="RangedBehavior" load_steps=2 format=3 uid="uid://bk3s45ww4diwx"]
+
+[ext_resource type="Script" uid="uid://c4itwli8tljs2" path="res://entities/enemies/behaviors/ranged_behavior.gd" id="1_wcgfp"]
+
+[resource]
+script = ExtResource("1_wcgfp")
+metadata/_custom_type_script = "uid://c4itwli8tljs2"

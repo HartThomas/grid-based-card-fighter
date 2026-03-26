@@ -299,6 +299,7 @@ texture_region_size = Vector2i(32, 32)
 10:0/0/terrains_peering_bit/left_side = 0
 10:1/0 = 0
 10:1/0/terrain_set = 0
+10:1/0/terrain = 1
 10:2/0 = 0
 10:2/0/terrain_set = 0
 10:2/0/terrain = 0
@@ -352,6 +353,8 @@ tile_size = Vector2i(32, 32)
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Walls"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+terrain_set_0/terrain_1/name = "Nonwalls"
+terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
 sources/1 = SubResource("TileSetAtlasSource_rj4uv")
 
 [node name="Level" type="Node2D"]
