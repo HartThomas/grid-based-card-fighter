@@ -19,3 +19,8 @@ func get_intent(enemy: EnemyContainer):
 				enemy.set_state(enemy.States.ATTACK)
 			elif distance >200:
 				enemy.set_state(enemy.States.AGGRO)
+		enemy.States.COWARD:
+			if distance > 200:
+				enemy.set_state(enemy.States.AGGRO)
+			elif distance > 100:
+				enemy.set_state(enemy.States.ATTACK)

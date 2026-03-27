@@ -7,6 +7,7 @@ class_name AnimatedEntity
 var data
 
 func _ready() -> void:
+	await get_tree().process_frame
 	setup()
 
 func setup() -> void:

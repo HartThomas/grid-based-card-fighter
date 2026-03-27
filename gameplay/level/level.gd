@@ -75,6 +75,7 @@ func add_enemies(enemies: Array[Enemy], level_generator: LevelGenerator)-> void:
 	var random_tile = level_generator.random_free_cell(1)
 	var spawn_cells = level_generator.get_random_cells_around(random_tile[0], 5, enemies.size())
 	for i in range(enemies.size()):
+		print(enemies[i].name)
 		var enemy_scene = ENEMY.instantiate()
 		var enemy_pos : Vector2i = spawn_cells[i]
 		enemy_scene.position = enemy_pos * 32

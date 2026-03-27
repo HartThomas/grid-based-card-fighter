@@ -19,20 +19,21 @@ enum States {
 	COWARD
 }
 
-var state = States.IDLE
+var state : States = States.IDLE
 var prev_state = null
 
 func _ready() -> void:
 	if !data:
 		var new_enemy = load('res://entities/enemies/bogman/bogman.tres') as Enemy
-		print(new_enemy.behavior, '    ghggh')
 		var instance = EnemyInstance.new()
 		instance.setup(new_enemy)
 		data = instance
 	if data:
 		data.die.connect(_die)
+	#print(animated_sprite.sprite_name, ' glfojiodfjjoff')
+	animated_sprite.sprite_name = data.data.name
+	#print(animated_sprite.sprite_name, ' hgdhdh')
 	request_new_path()
-	
 
 func take_damage(amount: int) -> void:
 	data.take_damage(amount)
@@ -44,29 +45,48 @@ func  _process(delta: float) -> void:
 	var distance_to_player = position.distance_to(get_player_pos())
 	match state: 
 		States.AGGRO:
-			if recalc_path_timer >= 0.5: # recalc path twice every second
-				recalc_path_timer = 0.0
-				request_new_path()
-			if path.size() > 0 and not CooldownManager.is_on_cooldown(self, "move"):
-				var next_tile = path[0] 
-				if next_tile:
-					var moved = get_parent().move_enemy(self, current_position, next_tile)
-					if moved:
-						path.pop_front()
-				# Start cooldown for movement
-				move_delay = 1.0 / move_speed
-				CooldownManager.start_cooldown(self, "move", move_delay)
+			move_along_path()
+		States.COWARD:
+			move_along_path()
 	recalc_path_timer += delta
+
+func move_along_path()->void:
+	if recalc_path_timer >= 0.5: # recalc path twice every second
+		recalc_path_timer = 0.0
+		request_new_path()
+	if path.size() > 0 and not CooldownManager.is_on_cooldown(self, "move"):
+		var next_tile = path[0] 
+		if next_tile:
+			var moved = get_parent().move_enemy(self, current_position, next_tile)
+			if moved:
+				path.pop_front()
+		# Start cooldown for movement
+		move_delay = 1.0 / move_speed
+		CooldownManager.start_cooldown(self, "move", move_delay)
 
 func get_player_pos()-> Vector2:
 	return get_parent().instantiated_player_scene.position
 
-func request_new_path()->void:
+func request_new_path() -> void:
 	var req = EnemyPathingRequest.new()
 	req.entity = self
 	req.from = current_position
-	req.to = get_parent().instantiated_player_scene.current_position
+	match state:
+		States.COWARD:
+			req.to = get_coward_target()
+		_:
+			req.to = get_parent().instantiated_player_scene.current_position
 	get_parent().pathing_requests.append(req)
+
+func get_direction_away_from_player() -> Vector2i:
+	var player_pos = get_parent().instantiated_player_scene.current_position
+	var dir = current_position - player_pos
+	return Vector2i(sign(dir.x), sign(dir.y))
+
+func get_coward_target() -> Vector2i:
+	var dir = get_direction_away_from_player()
+	var distance = 5
+	return current_position + dir * distance
 
 func set_state(new_state : States):
 	if new_state == state:
