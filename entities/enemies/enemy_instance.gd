@@ -29,3 +29,6 @@ func take_damage(amount: int) -> void:
 
 func get_behavior() -> EnemyBehavior:
 	return data.behavior
+
+func get_attack() -> EnemyAttack:
+	return data.attack

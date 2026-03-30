@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="Enemy" load_steps=6 format=3 uid="uid://bb0t85u0u142k"]
+[gd_resource type="Resource" script_class="Enemy" load_steps=7 format=3 uid="uid://bb0t85u0u142k"]
 
 [ext_resource type="Script" uid="uid://cgtlvr2d8q50r" path="res://entities/enemies/enemy_data.gd" id="1_m8qr4"]
 [ext_resource type="Script" uid="uid://dh54dujmf3tr5" path="res://entities/animated_sprite/sprite_animation/sprite_animation.gd" id="1_x5gnc"]
 [ext_resource type="Resource" uid="uid://vxkxc7x7u78b" path="res://entities/enemies/bogman/animations/idle.tres" id="2_452km"]
 [ext_resource type="Resource" uid="uid://b7bw0qh6l2me8" path="res://entities/enemies/bogman/animations/attack.tres" id="3_452km"]
+[ext_resource type="Resource" uid="uid://cistvk1d3xwyb" path="res://entities/enemies/attacks/melee_attack.tres" id="4_hqu1q"]
 [ext_resource type="Resource" uid="uid://d3sj7peybw7kc" path="res://entities/enemies/behaviors/melee_behavior.tres" id="4_j6fjn"]
 
 [resource]
@@ -12,6 +13,7 @@ health = 10
 speed = 1.0
 attack_damage = 5
 behavior = ExtResource("4_j6fjn")
+attack = ExtResource("4_hqu1q")
 name = "bogman"
 animations = Dictionary[String, ExtResource("1_x5gnc")]({
 "attack": ExtResource("3_452km"),

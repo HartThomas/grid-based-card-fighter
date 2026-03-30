@@ -115,8 +115,12 @@ func setup() -> void:
 		animated_sprite.animation_finished.connect(post_attack_idle)
 
 func post_attack_idle() :
-	get_parent().enemy_attack(data, position)
+	var attack = data.get_attack()
+	attack.execute(self,get_player_pos())
 	set_state(States.AGGRO)
+
+func melee_attack() -> void:
+	get_parent().enemy_melee_attack(data)
 
 func _die(data:EnemyInstance) ->void:
 	die.emit(data,current_position)

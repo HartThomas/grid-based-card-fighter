@@ -229,7 +229,7 @@ func _process(_delta: float) -> void:
 	reserved_tiles.clear()
 	handle_path_requests()
 
-func enemy_attack(data:EnemyInstance, _pos) -> void:
+func enemy_melee_attack(data:EnemyInstance) -> void:
 	if data.has_method('get_attack_damage'):
 		var damage_to_player = data.get_attack_damage()
 		instantiated_player_scene.data.take_damage(damage_to_player)
