@@ -9,6 +9,7 @@ var path: Array[Vector2i] = []
 var move_speed : float = 5.0
 var move_delay: float
 @onready var animated_sprite: AnimatedEntity = $AnimatedSprite
+var friendly: bool = false
 
 signal die(data,pos)
 

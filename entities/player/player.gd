@@ -4,6 +4,7 @@ class_name EntityContainer
 
 @export var data : EntityInstance
 var current_position : Vector2i = Vector2i(5,0)
+var friendly : bool = true
 
 func _ready() -> void:
 	if !data:
@@ -11,4 +12,6 @@ func _ready() -> void:
 		var instance = PlayerInstance.new()
 		instance.data = new_player
 		data = instance
-	
+
+func take_damage(amount: int) -> void:
+	data.take_damage(amount)
