@@ -6,7 +6,6 @@ var projectile_scene: PackedScene =  preload("res://gameplay/projectiles/project
 @export var projectile_data : ProjectileData
 
 func execute(attacker, target):
-	print('arrow loosing')
 	var proj = projectile_scene.instantiate()
 	projectile_data.target = target
 	projectile_data.attackers_pos = attacker.global_position
