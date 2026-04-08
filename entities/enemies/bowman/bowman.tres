@@ -1,10 +1,11 @@
-[gd_resource type="Resource" script_class="Enemy" load_steps=6 format=3 uid="uid://ctgtuufvwmdcx"]
+[gd_resource type="Resource" script_class="Enemy" load_steps=7 format=3 uid="uid://ctgtuufvwmdcx"]
 
 [ext_resource type="Script" uid="uid://dh54dujmf3tr5" path="res://entities/animated_sprite/sprite_animation/sprite_animation.gd" id="1_cfmue"]
 [ext_resource type="Resource" uid="uid://djx5tx46sq8vq" path="res://entities/enemies/bowman/animations/idle.tres" id="2_8v6et"]
 [ext_resource type="Script" uid="uid://cgtlvr2d8q50r" path="res://entities/enemies/enemy_data.gd" id="2_f56ou"]
 [ext_resource type="Resource" uid="uid://cfcxgfpft3yh4" path="res://entities/enemies/bowman/animations/attack.tres" id="3_j24xx"]
 [ext_resource type="Resource" uid="uid://bk3s45ww4diwx" path="res://entities/enemies/behaviors/ranged_behavior.tres" id="3_nw857"]
+[ext_resource type="Resource" uid="uid://b1xtn5nhtc87y" path="res://entities/enemies/attacks/ranged_attack.tres" id="4_j24xx"]
 
 [resource]
 script = ExtResource("2_f56ou")
@@ -12,6 +13,7 @@ health = 5
 speed = 0.6
 attack_damage = 3
 behavior = ExtResource("3_nw857")
+attack = ExtResource("4_j24xx")
 name = "bowman"
 animations = Dictionary[String, ExtResource("1_cfmue")]({
 "attack": ExtResource("3_j24xx"),
