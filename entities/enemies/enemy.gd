@@ -86,7 +86,7 @@ func get_direction_away_from_player() -> Vector2i:
 
 func get_coward_target() -> Vector2i:
 	var dir = get_direction_away_from_player()
-	var distance = 5
+	var distance = 3
 	return current_position + dir * distance
 
 func set_state(new_state : States):

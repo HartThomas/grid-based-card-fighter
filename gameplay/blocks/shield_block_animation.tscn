@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://0bx6123fln5f"]
+
+[ext_resource type="Texture2D" uid="uid://35qrsu8gpa8n" path="res://art/sprites/shield.png" id="1_ndjwv"]
+[ext_resource type="Script" uid="uid://cej8ws0envvqp" path="res://gameplay/blocks/shield_block_animation.gd" id="2_n68ms"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yhq1c"]
+atlas = ExtResource("1_ndjwv")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v3nef"]
+atlas = ExtResource("1_ndjwv")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_74m06"]
+atlas = ExtResource("1_ndjwv")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lbhk3"]
+atlas = ExtResource("1_ndjwv")
+region = Rect2(24, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_13on7"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yhq1c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v3nef")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74m06")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lbhk3")
+}],
+"loop": false,
+"name": &"shield",
+"speed": 5.0
+}]
+
+[node name="ShieldBlockAnimation" type="AnimatedSprite2D"]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_13on7")
+animation = &"shield"
+script = ExtResource("2_n68ms")

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://by41cyc8o2g0s"]
+
+[ext_resource type="Script" uid="uid://infbnetlxwv7" path="res://gameplay/cards/card_data.gd" id="1_fwqym"]
+
+[resource]
+script = ExtResource("1_fwqym")
+card_name = "Arm up!"
+description = ""
+base_cost = 1
+type = 1
+item = 2
+base_damage = 0
+base_block = 1
+attack_pattern = Array[Vector2i]([])
+attack_size = Vector2i(32, 32)
+rotate_to_direction = true
+metadata/_custom_type_script = "uid://infbnetlxwv7"

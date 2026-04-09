@@ -18,7 +18,6 @@ var card_manager : CardManager
 var card_scene := preload("res://gameplay/cards/card.tscn")
 @onready var highlight_cell: CellHighlight = $TileMapLayer/HighlightCell
 var can_player_move : bool = true
-const ATTACK_ANIMATION = preload("res://gameplay/attacks/attack_animation.tscn")
 var card_slots : Array[Control]
 @onready var health_bar: TextureProgressBar = $CanvasLayer/GUI/HealthBar
 
@@ -223,7 +222,8 @@ func handle_path_requests() -> void:
 		for i in range(pathing_requests.size()):
 			var request = pathing_requests.pop_front() as EnemyPathingRequest
 			var new_path = recalculate_path(request.from, request.to)
-			request.entity.path = new_path
+			if request.entity:
+				request.entity.path = new_path
 
 func _process(_delta: float) -> void:
 	reserved_tiles.clear()
@@ -236,7 +236,7 @@ func enemy_melee_attack(data:EnemyInstance) -> void:
 		update_health_bar()
 
 func setup_starting_deck():
-	var shwick_data = preload("res://resources/cards/shwick.tres")
+	var shwick_data = preload("res://resources/cards/shield.tres")
 	for i in 5:
 		var card = CardInstance.new()
 		card.setup(shwick_data)
@@ -257,7 +257,7 @@ func draw_hand() -> void:
 	update_pile_feedback()
 
 func _on_card_drag_started(data:CardInstance) -> void:
-	highlight_cell._setup(CardEnums.item.keys()[data.get_item()].to_lower())
+	highlight_cell._setup(CardEnums.item.keys()[data.get_item()].to_lower(), data)
 	highlight_cell.show_highlight()
 	can_player_move = false
 
@@ -274,10 +274,18 @@ func _on_card_played(card:CardInstance,card_instantia:Card)->void:
 	if can_card_be_played(card):
 		var player = instantiated_player_scene.data
 		player.spend_effort(card.get_cost())
-		var attack_scene = ATTACK_ANIMATION.instantiate()
-		attack_scene.attack_finished.connect(attack_damage)
-		add_child(attack_scene)
-		attack_scene._setup(card,target_highlighted,target_dir)
+		if card_instantia.data.get_type() == CardEnums.type.ATTACK:
+			var attack = load("res://gameplay/attacks/%s_attack_animation.tscn" % [CardEnums.item.keys()[card_instantia.data.get_item()].to_lower()])
+			var attack_scene = attack.instantiate()
+			attack_scene.attack_finished.connect(attack_damage)
+			add_child(attack_scene)
+			attack_scene._setup(card,target_highlighted,target_dir)
+		elif card_instantia.data.get_type() == CardEnums.type.BLOCK:
+			var block = load("res://gameplay/blocks/%s_block_animation.tscn" % [CardEnums.item.keys()[card_instantia.data.get_item()].to_lower()])
+			var block_scene = block.instantiate()
+			block_scene._setup(card)
+			add_child(block_scene)
+			block_scene.global_position = instantiated_player_scene.global_position + (Vector2(target_dir) * 16) + Vector2(16,16)
 		card_instantia.queue_free()
 		card_manager.use_card(card)
 		update_pile_feedback()

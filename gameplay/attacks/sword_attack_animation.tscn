@@ -1,18 +1,18 @@
 [gd_scene load_steps=7 format=3 uid="uid://dxcxgd80oneux"]
 
-[ext_resource type="Texture2D" uid="uid://tq5f4if72v1s" path="res://art/sprites/sword_parallel.png" id="1_o4xyx"]
-[ext_resource type="Script" uid="uid://bmi35ae42cawm" path="res://gameplay/attacks/attack_animation.gd" id="2_yg06w"]
+[ext_resource type="Texture2D" uid="uid://tq5f4if72v1s" path="res://art/sprites/sword_parallel.png" id="1_weget"]
+[ext_resource type="Script" uid="uid://bmi35ae42cawm" path="res://gameplay/attacks/sword_attack_animation.gd" id="2_f4kdi"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jnidk"]
-atlas = ExtResource("1_o4xyx")
+atlas = ExtResource("1_weget")
 region = Rect2(0, 0, 32, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h7bev"]
-atlas = ExtResource("1_o4xyx")
+atlas = ExtResource("1_weget")
 region = Rect2(32, 0, 32, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fmkio"]
-atlas = ExtResource("1_o4xyx")
+atlas = ExtResource("1_weget")
 region = Rect2(64, 0, 32, 96)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v8uf8"]
@@ -37,8 +37,10 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="AttackAnimation" type="AnimatedSprite2D"]
+[node name="SwordAttackAnimation" type="AnimatedSprite2D"]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_v8uf8")
 animation = &"sword"
-script = ExtResource("2_yg06w")
+frame = 2
+frame_progress = 1.0
+script = ExtResource("2_f4kdi")

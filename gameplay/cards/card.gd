@@ -66,7 +66,7 @@ func _on_card_texture_gui_input(event: InputEvent) -> void:
 				is_dragging = false
 				card_drag_ended.emit()
 				_on_card_texture_mouse_exited()
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT :
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			is_dragging = true
 			card_drag_started.emit(data)

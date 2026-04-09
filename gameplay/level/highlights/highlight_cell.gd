@@ -6,8 +6,10 @@ var showing : bool = false
 var target_cell : Vector2i
 var direction : Vector2i
 @onready var sprite_2d: Sprite2D = $Sprite2D
+var data : CardInstance
 
-func _setup(item: String)->void:
+func _setup(item: String, card_data: CardInstance)->void:
+	data = card_data
 	var new_texture = load("res://art/sprites/%s_highlight_cell.png" % [item])
 	sprite_2d.texture = new_texture
 	var rotation = rotate_pattern(direction)
@@ -28,9 +30,12 @@ func _process(delta: float) -> void:
 			var rotation = rotate_pattern(grid_dir)
 			sprite_2d.rotation = rotation
 			direction = grid_dir
-		var target : Vector2i = player.current_position + grid_dir
-		target_cell = target
-		position = target * 32 + Vector2i(16,16)
+		if data.get_item() == CardEnums.item.SHIELD:
+			position = player.global_position + (Vector2(grid_dir) * 16) + Vector2(16,16)
+		else:
+			var target : Vector2i = player.current_position + grid_dir
+			target_cell = target
+			position = target * 32 + Vector2i(16,16)
 
 func show_highlight() -> void:
 	showing = true
