@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://slv3fdbqx4e7"]
+
+[ext_resource type="Script" uid="uid://bgw88tdyk1rj3" path="res://gameplay/blocks/directional_block.gd" id="1_q7iso"]
+
+[node name="DirectionalBlock" type="Node2D"]
+script = ExtResource("1_q7iso")
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 2.0

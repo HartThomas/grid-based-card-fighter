@@ -7,6 +7,7 @@ var damage_taken : int = 0
 var effort_spent :int = 0
 signal die()
 signal exhausted()
+var directions_blocked_in : Dictionary = {right = false, left = false, up = false, down = false}
 
 func setup(player_data: PlayerData):
 	data = player_data
@@ -38,3 +39,30 @@ func spend_effort(amount: int) ->void:
 	effort_spent += amount
 	if get_current_effort() <= 0:
 		exhausted.emit()
+
+func convert_vector_direction_to_string(v_dir : Vector2i)-> String:
+	var key := ""
+
+	match v_dir:
+		Vector2i.UP:
+			key = "up"
+		Vector2i.DOWN:
+			key = "down"
+		Vector2i.LEFT:
+			key = "left"
+		Vector2i.RIGHT:
+			key = "right"
+	
+	return key
+
+func block_in_a_direction(dir:Vector2i) -> void:
+	directions_blocked_in[convert_vector_direction_to_string(dir)] = true
+
+func get_block_in_direction(dir:Vector2i)-> bool:
+	return directions_blocked_in[convert_vector_direction_to_string(dir)]
+
+func use_block_in_direction(dir:Vector2i) -> void:
+	if get_block_in_direction(dir):
+		directions_blocked_in[convert_vector_direction_to_string(dir)] = false
+	else:
+		print('Attempted to use block in the ' + convert_vector_direction_to_string(dir) + ' direction, but there was no block')

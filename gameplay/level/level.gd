@@ -284,6 +284,7 @@ func _on_card_played(card:CardInstance,card_instantia:Card)->void:
 			var block = load("res://gameplay/blocks/%s_block_animation.tscn" % [CardEnums.item.keys()[card_instantia.data.get_item()].to_lower()])
 			var block_scene = block.instantiate()
 			block_scene._setup(card)
+			block_scene.block_finished.connect(block_in_a_direction.bind(target_dir))
 			add_child(block_scene)
 			block_scene.global_position = instantiated_player_scene.global_position + (Vector2(target_dir) * 16) + Vector2(16,16)
 		card_instantia.queue_free()
@@ -301,7 +302,14 @@ func attack_damage(data:CardInstance)-> void:
 		var target = level_data[tile.y].get_tile(tile.x)
 		if target.entity:
 			target.entity.take_damage(data.get_damage())
-			
+
+func block_in_a_direction(dir : Vector2i) -> void:
+	instantiated_player_scene.data.block_in_a_direction(dir)
+	var block_line = load("res://gameplay/blocks/directional_block.tscn")
+	var new_block_line = block_line.instantiate()
+	add_child(new_block_line)
+	new_block_line.position = instantiated_player_scene.global_position + (Vector2(target_dir) * 16) + Vector2(16,16)
+	new_block_line.animate_line(target_dir)
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
 	var tiles : Array[Vector2i] = []
