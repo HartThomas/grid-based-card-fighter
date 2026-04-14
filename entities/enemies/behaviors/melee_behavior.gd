@@ -7,11 +7,11 @@ func get_intent(enemy: EnemyContainer):
 	
 	match enemy.state:
 		enemy.States.ATTACK:
-			if distance >= 64:
+			if distance > 32:
 				enemy.set_state(enemy.States.AGGRO)
 		enemy.States.IDLE:
 			if distance < 200:
 				enemy.set_state(enemy.States.AGGRO)
 		enemy.States.AGGRO:
-			if distance < 64:
+			if distance <= 32:
 				enemy.set_state(enemy.States.ATTACK)

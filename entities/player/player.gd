@@ -16,8 +16,8 @@ func _ready() -> void:
 		data = instance
 		
 
-func take_damage(amount: int) -> void:
-	data.take_damage(amount)
+func take_damage(amount: int, direction : Vector2i) -> void:
+	data.take_damage(amount, direction)
 
 func use_block(direction: Vector2i)-> void:
 	var block = blocks[data.convert_vector_direction_to_string(direction)]
