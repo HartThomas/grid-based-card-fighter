@@ -229,11 +229,13 @@ func _process(_delta: float) -> void:
 	reserved_tiles.clear()
 	handle_path_requests()
 
-func enemy_melee_attack(data:EnemyInstance) -> void:
-	if data.has_method('get_attack_damage'):
-		var damage_to_player = data.get_attack_damage()
-		instantiated_player_scene.data.take_damage(damage_to_player)
-		update_health_bar()
+func enemy_melee_attack(data:EnemyContainer) -> void:
+	if data.data:
+		if data.data.has_method('get_attack_damage'):
+			var direction = data.current_position - instantiated_player_scene.current_position
+			var damage_to_player = data.data.get_attack_damage()
+			instantiated_player_scene.data.take_damage(damage_to_player, direction)
+			update_health_bar()
 
 func setup_starting_deck():
 	var shwick_data = preload("res://resources/cards/shield.tres")
@@ -307,8 +309,9 @@ func block_in_a_direction(dir : Vector2i) -> void:
 	instantiated_player_scene.data.block_in_a_direction(dir)
 	var block_line = load("res://gameplay/blocks/directional_block.tscn")
 	var new_block_line = block_line.instantiate()
-	add_child(new_block_line)
-	new_block_line.position = instantiated_player_scene.global_position + (Vector2(target_dir) * 16) + Vector2(16,16)
+	instantiated_player_scene.add_child(new_block_line)
+	instantiated_player_scene.add_block(target_dir, new_block_line)
+	new_block_line.position = (Vector2(target_dir) * 16) + Vector2(16,16)
 	new_block_line.animate_line(target_dir)
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:

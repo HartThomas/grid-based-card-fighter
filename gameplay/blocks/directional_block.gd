@@ -1,19 +1,6 @@
 extends Node2D
 
-#
-#func update_line(offset: float):
-	## Left point moves right
-	#var start = Vector2(-half_length + offset, 0)
-	## Right point moves left
-	#var end = Vector2(half_length - offset, 0)
-#
-	#line_2d.points = [start, end]
-#
-#func update_line(offset: float):
-	#var start = Vector2(-offset, 0)
-	#var end = Vector2(offset, 0)
-#
-	#line_2d.points = [start, end]
+class_name DirectionalBlock
 
 @onready var line: Line2D = $Line2D
 

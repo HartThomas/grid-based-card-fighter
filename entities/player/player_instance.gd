@@ -8,6 +8,7 @@ var effort_spent :int = 0
 signal die()
 signal exhausted()
 var directions_blocked_in : Dictionary = {right = false, left = false, up = false, down = false}
+signal block_used(direction)
 
 func setup(player_data: PlayerData):
 	data = player_data
@@ -24,10 +25,14 @@ func get_attack_damage() -> int:
 func buff_damage(amount: int) ->void:
 	damage_modifier += amount
 
-func take_damage(amount: int) -> void:
-	damage_taken += amount
-	if damage_taken >= get_starting_health():
-		die.emit()
+func take_damage(amount: int, direction: Vector2i) -> void:
+	if not get_block_in_direction(direction):
+		damage_taken += amount
+		if damage_taken >= get_starting_health():
+			die.emit()
+	else:
+		use_block_in_direction(direction)
+		block_used.emit(direction)
 
 func get_starting_effort()->int:
 	return data.effort
@@ -52,7 +57,8 @@ func convert_vector_direction_to_string(v_dir : Vector2i)-> String:
 			key = "left"
 		Vector2i.RIGHT:
 			key = "right"
-	
+		_:
+			print(v_dir, ' not a direction')
 	return key
 
 func block_in_a_direction(dir:Vector2i) -> void:

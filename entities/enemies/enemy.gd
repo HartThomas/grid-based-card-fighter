@@ -121,7 +121,7 @@ func post_attack_idle() :
 	set_state(States.AGGRO)
 
 func melee_attack() -> void:
-	get_parent().enemy_melee_attack(data)
+	get_parent().enemy_melee_attack(self)
 
 func _die(data:EnemyInstance) ->void:
 	die.emit(data,current_position)
