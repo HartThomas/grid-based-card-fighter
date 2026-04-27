@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DeckData" load_steps=5 format=3 uid="uid://vdj3hxxao1yw"]
+
+[ext_resource type="Script" uid="uid://infbnetlxwv7" path="res://gameplay/cards/card_data.gd" id="1_woe3k"]
+[ext_resource type="Script" uid="uid://cxp3kmj4eo62p" path="res://resources/decks/deck_data.gd" id="2_6uvoe"]
+[ext_resource type="Resource" uid="uid://by41cyc8o2g0s" path="res://resources/cards/shield.tres" id="2_lh2vd"]
+[ext_resource type="Resource" uid="uid://0uk120bflwpm" path="res://resources/cards/shwick.tres" id="3_lt7ic"]
+
+[resource]
+script = ExtResource("2_6uvoe")
+deck = Array[ExtResource("1_woe3k")]([ExtResource("2_lh2vd"), ExtResource("2_lh2vd"), ExtResource("3_lt7ic"), ExtResource("3_lt7ic"), ExtResource("3_lt7ic")])
+metadata/_custom_type_script = "uid://cxp3kmj4eo62p"

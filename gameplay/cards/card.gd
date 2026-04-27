@@ -13,6 +13,7 @@ var mouse_offset : Vector2
 signal card_drag_started(data)
 signal card_drag_ended()
 signal card_played(data, card)
+@onready var card_highlight: TextureRect = $CardHighlight
 
 func _ready() -> void:
 	if not data:
@@ -80,3 +81,9 @@ func _on_card_texture_gui_input(event: InputEvent) -> void:
 				card_drag_ended.emit()
 				_on_card_texture_mouse_exited()
 				card_played.emit(data, self)
+
+var selected: bool = false
+
+func card_selected() -> void:
+	card_highlight.visible = !card_highlight.visible
+	selected = !selected

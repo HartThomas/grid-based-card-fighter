@@ -92,26 +92,6 @@ func enemy_killed(enemy:EnemyInstance, pos: Vector2i)-> void:
 func add_entity_to_tile(entity: EntityInstance, tile :Vector2i) ->void:
 	level_data[tile.y].set_tile_entity(tile.x,entity)
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if not key_clicked:
-			key_clicked = true
-			match event.as_text_keycode():
-				'Down':
-					var current_position = instantiated_player_scene.current_position
-					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y+1))
-				'Up':
-					var current_position = instantiated_player_scene.current_position
-					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y-1))
-				'Right':
-					var current_position = instantiated_player_scene.current_position
-					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x+1, current_position.y))
-				'Left':
-					var current_position = instantiated_player_scene.current_position
-					move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x-1, current_position.y))
-		if event.is_released():
-			key_clicked = false
-
 func move_entity(entity: EntityContainer, from :Vector2i, to: Vector2i) -> void:
 	if can_player_move:
 		var data = entity.data
@@ -228,6 +208,34 @@ func handle_path_requests() -> void:
 func _process(_delta: float) -> void:
 	reserved_tiles.clear()
 	handle_path_requests()
+	if Input.is_action_just_pressed("select_card_1"):
+		deselect_cards(0)
+		card_slots[0].get_child(0).card_selected()
+	if Input.is_action_just_pressed("select_card_2"):
+		deselect_cards(1)
+		card_slots[1].get_child(0).card_selected()
+	if Input.is_action_just_pressed("select_card_3"):
+		deselect_cards(2)
+		card_slots[2].get_child(0).card_selected()
+	if Input.is_action_just_pressed("down_direction"):
+		var current_position = instantiated_player_scene.current_position
+		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y+1))
+	if Input.is_action_just_pressed('up_direction'):
+		var current_position = instantiated_player_scene.current_position
+		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y-1))
+	if Input.is_action_just_pressed("right_direction"):
+		var current_position = instantiated_player_scene.current_position
+		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x+1, current_position.y))
+	if Input.is_action_just_pressed('left_direction'):
+		var current_position = instantiated_player_scene.current_position
+		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x-1, current_position.y))
+
+func deselect_cards(index: int) -> void:
+	for i in range(card_slots.size()):
+		if i != index: 
+			var instance : Card = card_slots[i].get_child(0)
+			if instance.selected:
+				instance.card_selected()
 
 func enemy_melee_attack(data:EnemyContainer) -> void:
 	if data.data:
@@ -238,12 +246,12 @@ func enemy_melee_attack(data:EnemyContainer) -> void:
 			update_health_bar()
 
 func setup_starting_deck():
-	var shwick_data = preload("res://resources/cards/shield.tres")
-	for i in 5:
-		var card = CardInstance.new()
-		card.setup(shwick_data)
-		card_manager.cards_owned.append(card)
-		card_manager.add_card_to_deck(card)
+	var deck = load("res://resources/decks/starter_deck.tres")
+	for card in deck.deck:
+		var new_card = CardInstance.new()
+		new_card.setup(card)
+		card_manager.cards_owned.append(new_card)
+		card_manager.add_card_to_deck(new_card)
 	card_manager.deck.shuffle()
 	update_pile_feedback()
 
