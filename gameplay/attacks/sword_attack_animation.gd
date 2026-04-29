@@ -1,6 +1,6 @@
 extends AnimatedSprite2D
 
-signal attack_finished(data)
+signal attack_finished(data, target_cell, direction)
 
 func _setup(data: CardInstance, target_cell : Vector2i, direction: Vector2i) -> void:
 	var attack_type = data.get_item()
@@ -11,7 +11,7 @@ func _setup(data: CardInstance, target_cell : Vector2i, direction: Vector2i) -> 
 	if card_data.rotate_to_direction:
 		rotation = direction_to_rotation(direction)
 	offset = get_offset_for_direction(direction, card_data.attack_size)
-	animation_finished.connect(finished.bind(data))
+	animation_finished.connect(finished.bind(data, target_cell, direction))
 
 func direction_to_rotation(dir: Vector2i) -> float:
 	match dir:
@@ -41,6 +41,6 @@ func get_offset_for_direction(dir: Vector2i, size: Vector2i) -> Vector2:
 		_:
 			return Vector2.ZERO
 
-func finished(data: CardInstance)-> void:
-	attack_finished.emit(data)
+func finished(data: CardInstance, target_cell: Vector2i, direction: Vector2i)-> void:
+	attack_finished.emit(data, target_cell, direction)
 	queue_free()

@@ -11,7 +11,11 @@ func _init(width: int = 0) -> void:
 		tiles.resize(width)
 
 func get_tile(x: int) -> Tile:
-	return tiles[x]
+	if not x > tiles.size():
+		return tiles[x]
+	else:
+		var fake_tile = Tile.new()
+		return fake_tile
 
 func set_tile(x: int, tile: Tile) -> void:
 	tiles[x] = tile

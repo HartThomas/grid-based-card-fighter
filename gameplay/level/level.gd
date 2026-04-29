@@ -20,6 +20,7 @@ var card_scene := preload("res://gameplay/cards/card.tscn")
 var can_player_move : bool = true
 var card_slots : Array[Control]
 @onready var health_bar: TextureProgressBar = $CanvasLayer/GUI/HealthBar
+var card_selected : Card
 
 func _ready() -> void:
 	var level_generator = generator.new() as LevelGenerator
@@ -210,32 +211,63 @@ func _process(_delta: float) -> void:
 	handle_path_requests()
 	if Input.is_action_just_pressed("select_card_1"):
 		deselect_cards(0)
-		card_slots[0].get_child(0).card_selected()
+		var instantiated_card : Card = card_slots[0].get_child(0)
+		if instantiated_card:
+			instantiated_card.card_selected()
+			if instantiated_card.selected:
+				card_selected = instantiated_card
+			else:
+				card_selected = null
 	if Input.is_action_just_pressed("select_card_2"):
 		deselect_cards(1)
-		card_slots[1].get_child(0).card_selected()
+		var instantiated_card : Card = card_slots[1].get_child(0)
+		if instantiated_card:
+			instantiated_card.card_selected()
+			if instantiated_card.selected:
+				card_selected = instantiated_card
+			else:
+				card_selected = null
 	if Input.is_action_just_pressed("select_card_3"):
 		deselect_cards(2)
-		card_slots[2].get_child(0).card_selected()
+		var instantiated_card : Card = card_slots[2].get_child(0)
+		if instantiated_card:
+			instantiated_card.card_selected()
+			if instantiated_card.selected:
+				card_selected = instantiated_card
+			else:
+				card_selected = null
 	if Input.is_action_just_pressed("down_direction"):
-		var current_position = instantiated_player_scene.current_position
-		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y+1))
+		if card_selected:
+			_on_card_played(card_selected.data, card_selected, Vector2i.DOWN, instantiated_player_scene.current_position + Vector2i.DOWN)
+		else:
+			var current_position = instantiated_player_scene.current_position
+			move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y+1))
 	if Input.is_action_just_pressed('up_direction'):
-		var current_position = instantiated_player_scene.current_position
-		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y-1))
+		if card_selected:
+			_on_card_played(card_selected.data, card_selected, Vector2i.UP, instantiated_player_scene.current_position + Vector2i.UP)
+		else:
+			var current_position = instantiated_player_scene.current_position
+			move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x, current_position.y-1))
 	if Input.is_action_just_pressed("right_direction"):
-		var current_position = instantiated_player_scene.current_position
-		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x+1, current_position.y))
+		if card_selected:
+			_on_card_played(card_selected.data, card_selected, Vector2i.RIGHT, instantiated_player_scene.current_position + Vector2i.RIGHT)
+		else:
+			var current_position = instantiated_player_scene.current_position
+			move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x+1, current_position.y))
 	if Input.is_action_just_pressed('left_direction'):
-		var current_position = instantiated_player_scene.current_position
-		move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x-1, current_position.y))
+		if card_selected:
+			_on_card_played(card_selected.data, card_selected, Vector2i.LEFT, instantiated_player_scene.current_position + Vector2i.LEFT)
+		else:
+			var current_position = instantiated_player_scene.current_position
+			move_entity(instantiated_player_scene, current_position, Vector2i(current_position.x-1, current_position.y))
 
 func deselect_cards(index: int) -> void:
 	for i in range(card_slots.size()):
 		if i != index: 
 			var instance : Card = card_slots[i].get_child(0)
-			if instance.selected:
-				instance.card_selected()
+			if instance:
+				if instance.selected:
+					instance.card_selected()
 
 func enemy_melee_attack(data:EnemyContainer) -> void:
 	if data.data:
@@ -280,7 +312,7 @@ func _on_card_drag_ended() -> void:
 	target_highlighted = targets[0]
 	target_dir = targets[1]
 
-func _on_card_played(card:CardInstance,card_instantia:Card)->void:
+func _on_card_played(card:CardInstance,card_instantia:Card, targ = target_dir, target_cell = target_highlighted)->void:
 	if can_card_be_played(card):
 		var player = instantiated_player_scene.data
 		player.spend_effort(card.get_cost())
@@ -289,25 +321,26 @@ func _on_card_played(card:CardInstance,card_instantia:Card)->void:
 			var attack_scene = attack.instantiate()
 			attack_scene.attack_finished.connect(attack_damage)
 			add_child(attack_scene)
-			attack_scene._setup(card,target_highlighted,target_dir)
+			attack_scene._setup(card, target_cell, targ)
 		elif card_instantia.data.get_type() == CardEnums.type.BLOCK:
 			var block = load("res://gameplay/blocks/%s_block_animation.tscn" % [CardEnums.item.keys()[card_instantia.data.get_item()].to_lower()])
 			var block_scene = block.instantiate()
 			block_scene._setup(card)
-			block_scene.block_finished.connect(block_in_a_direction.bind(target_dir))
+			block_scene.block_finished.connect(block_in_a_direction.bind(targ))
 			add_child(block_scene)
-			block_scene.global_position = instantiated_player_scene.global_position + (Vector2(target_dir) * 16) + Vector2(16,16)
+			block_scene.global_position = instantiated_player_scene.global_position + (Vector2(targ) * 16) + Vector2(16,16)
 		card_instantia.queue_free()
 		card_manager.use_card(card)
 		update_pile_feedback()
 		update_effort_bar()
+	print(card_manager.hand, target_cell, targ)
 
 func can_card_be_played(card: CardInstance)-> bool:
 	var player = instantiated_player_scene.data
 	return player.get_current_effort() - card.get_cost() >= 0
 
-func attack_damage(data:CardInstance)-> void:
-	var tiles = get_target_tiles(instantiated_player_scene.current_position,target_dir,data.data.attack_pattern)
+func attack_damage(data:CardInstance, target_cell: Vector2i = target_highlighted, direction: Vector2i = target_dir)-> void:
+	var tiles = get_target_tiles(instantiated_player_scene.current_position,direction,data.data.attack_pattern)
 	for tile in tiles:
 		var target = level_data[tile.y].get_tile(tile.x)
 		if target.entity:
@@ -318,9 +351,9 @@ func block_in_a_direction(dir : Vector2i) -> void:
 	var block_line = load("res://gameplay/blocks/directional_block.tscn")
 	var new_block_line = block_line.instantiate()
 	instantiated_player_scene.add_child(new_block_line)
-	instantiated_player_scene.add_block(target_dir, new_block_line)
-	new_block_line.position = (Vector2(target_dir) * 16) + Vector2(16,16)
-	new_block_line.animate_line(target_dir)
+	instantiated_player_scene.add_block(dir, new_block_line)
+	new_block_line.position = (Vector2(dir) * 16) + Vector2(16,16)
+	new_block_line.animate_line(dir)
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
 	var tiles : Array[Vector2i] = []
