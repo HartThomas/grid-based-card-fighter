@@ -333,7 +333,6 @@ func _on_card_played(card:CardInstance,card_instantia:Card, targ = target_dir, t
 		card_manager.use_card(card)
 		update_pile_feedback()
 		update_effort_bar()
-	print(card_manager.hand, target_cell, targ)
 
 func can_card_be_played(card: CardInstance)-> bool:
 	var player = instantiated_player_scene.data
@@ -347,13 +346,14 @@ func attack_damage(data:CardInstance, target_cell: Vector2i = target_highlighted
 			target.entity.take_damage(data.get_damage())
 
 func block_in_a_direction(dir : Vector2i) -> void:
-	instantiated_player_scene.data.block_in_a_direction(dir)
-	var block_line = load("res://gameplay/blocks/directional_block.tscn")
-	var new_block_line = block_line.instantiate()
-	instantiated_player_scene.add_child(new_block_line)
-	instantiated_player_scene.add_block(dir, new_block_line)
-	new_block_line.position = (Vector2(dir) * 16) + Vector2(16,16)
-	new_block_line.animate_line(dir)
+	if not instantiated_player_scene.data.get_block_in_direction(dir):
+		instantiated_player_scene.data.block_in_a_direction(dir)
+		var block_line = load("res://gameplay/blocks/directional_block.tscn")
+		var new_block_line = block_line.instantiate()
+		instantiated_player_scene.add_child(new_block_line)
+		instantiated_player_scene.add_block(dir, new_block_line)
+		new_block_line.position = (Vector2(dir) * 16) + Vector2(16,16)
+		new_block_line.animate_line(dir)
 
 func get_target_tiles(origin: Vector2i, direction: Vector2i, pattern: Array[Vector2i]) -> Array[Vector2i]:
 	var tiles : Array[Vector2i] = []
