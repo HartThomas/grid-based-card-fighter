@@ -26,6 +26,8 @@ func _ready() -> void:
 	var level_generator = generator.new() as LevelGenerator
 	if data:
 		level_data = level_generator.generate_level(data.size)
+	tile_map_layer.clear()
+	draw_wall_border(20)
 	fill_tile_map_layer_using_data()
 	create_astar()
 	add_player()
@@ -39,19 +41,61 @@ func _ready() -> void:
 	draw_hand()
 
 func fill_tile_map_layer_using_data() -> void:
-	tile_map_layer.clear()
+	
 	var height = level_data.size()
 	var width = level_data[0].tiles.size()
 	var cells : Array[Vector2i] = []
+	var alt_cells : Array[Vector2i] = []
 	for y in range(height):
 		for x in range(width):
 			var terrain = level_data[y].get_tile(x).terrain
 			if terrain == 'wall':
 				tile_map_layer.set_cell(Vector2i(x,y),1,Vector2i(0,3))
 				cells.append(Vector2i(x,y))
+				if randi() % 5 == 0:
+					alt_cells.append(Vector2i(x,y))
 			if terrain == 'empty':
 				tile_map_layer.set_cell(Vector2i(x,y),1,Vector2i(10,1))
 	tile_map_layer.set_cells_terrain_connect(cells,0,0)
+	for pos in alt_cells:
+		var cell_data = tile_map_layer.get_cell_tile_data(pos)
+		if cell_data:
+			var atlas_coords = tile_map_layer.get_cell_atlas_coords(pos)
+			if atlas_coords == Vector2i(9,2):
+				tile_map_layer.set_cell(pos, 1, atlas_coords, 1)
+
+func draw_wall_border(border_size: int = 10) -> void:
+	var height = level_data.size()
+	var width = level_data[0].tiles.size()
+	
+	var min_x = -border_size
+	var max_x = width + border_size - 1
+	var min_y = -border_size
+	var max_y = height + border_size - 1
+	
+	var cells : Array[Vector2i] = []
+	var alt_cells : Array[Vector2i] = []
+	
+	for y in range(min_y, max_y + 1):
+		for x in range(min_x, max_x + 1):
+			
+			# Skip the inner actual map area
+			if x >= 0 and x < width and y >= 0 and y < height:
+				continue
+			
+			# Place wall tile
+			tile_map_layer.set_cell(Vector2i(x, y), 1, Vector2i(0, 3), 1)
+			cells.append(Vector2i(x,y))
+			
+			if randi() % 5 == 0:
+				alt_cells.append(Vector2i(x,y))
+	tile_map_layer.set_cells_terrain_connect(cells,0,0)
+	for pos in alt_cells:
+		var cell_data = tile_map_layer.get_cell_tile_data(pos)
+		if cell_data:
+			var atlas_coords = tile_map_layer.get_cell_atlas_coords(pos)
+			if atlas_coords == Vector2i(9,2):
+				tile_map_layer.set_cell(pos, 1, atlas_coords, 1)
 
 func add_player()-> void:
 	var player_scene = PLAYER.instantiate()
